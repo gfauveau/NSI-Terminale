@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminale NSI : Récapitulatif des cours et exercices types</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Configuration MathJax pour le rendu des formules LaTeX inline ($...$) -->
+    <!-- Configuration MathJax pour le rendu des formules LaTeX -->
     <script>
         window.MathJax = {
             tex: {
@@ -23,27 +23,26 @@
         <div class="header-content">
             <span class="badge">NSI • Terminale</span>
             <h1>Terminale : récapitulatif des cours et exercices types</h1>
-            <p class="subtitle">Fiches de synthèse, entraînement type Bac et console Python interactive</p>
+            <p class="subtitle">Sélectionne une séance pour accéder à la fiche de synthèse, aux exercices types et au bac à sable Python</p>
         </div>
     </header>
 
-    <div class="main-layout">
-        <!-- Menu latéral des séances -->
-        <aside class="sidebar glass-panel">
-            <h2>Progression</h2>
-            <nav id="session-nav">
-                <!-- Généré dynamiquement par app.js -->
-            </nav>
-        </aside>
+    <main class="container">
+        <!-- Vue 1 : Grille de carrés indépendants pour chaque séance -->
+        <section id="sessions-grid-view" class="sessions-grid">
+            <!-- Cartes générées dynamiquement par app.js -->
+        </section>
 
-        <!-- Zone principale : Cours & Exercices -->
-        <main class="content-area">
-            <section id="course-container" class="glass-panel">
+        <!-- Vue 2 : Détail d'une séance + IDE Python (masquée par défaut) -->
+        <section id="session-detail-view" class="hidden">
+            <button id="back-btn" class="btn-back">← Retour aux séances</button>
+
+            <div id="course-container" class="glass-panel">
                 <!-- Contenu de la séance active -->
-            </section>
+            </div>
 
             <!-- IDE Python interactif -->
-            <section class="ide-container glass-panel">
+            <div class="ide-container glass-panel">
                 <div class="ide-header">
                     <h3>Bac à sable Python (Pyodide)</h3>
                     <div class="ide-actions">
@@ -57,9 +56,9 @@
                     <div class="console-label">Sortie console :</div>
                     <pre id="python-output"></pre>
                 </div>
-            </section>
-        </main>
-    </div>
+            </div>
+        </section>
+    </main>
 
     <script src="python-ide.js"></script>
     <script src="app.js"></script>

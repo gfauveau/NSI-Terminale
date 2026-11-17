@@ -1,7 +1,9 @@
 const sessionsData = [
     {
         id: "seance-0",
-        title: "Séance 0 : Récapitulatif des bases de 1re",
+        tag: "Séance 0 • Prérequis",
+        title: "Récapitulatif des bases de 1re",
+        shortDesc: "Types construits (listes, tuples, dictionnaires), parcours, spécifications, tests et algorithmes fondamentaux.",
         summary: `
             <p>Avant d'aborder la programmation orientée objet, la récursivité et les structures arborescentes, 
             cette séance permet de consolider les fondamentaux de Première indispensables pour l'épreuve pratique et écrite.</p>
@@ -88,7 +90,9 @@ print("Dichotomie validée !")`,
     },
     {
         id: "seance-1",
-        title: "Séance 1 : Programmation Orientée Objet (POO)",
+        tag: "Séance 1 • Paradigmes",
+        title: "Programmation Orientée Objet (POO)",
+        shortDesc: "Classes, instances, constructeur __init__, attributs, méthodes, encapsulation et composition d'objets.",
         summary: `
             <p>La Programmation Orientée Objet permet de regrouper au sein d'une même structure (une <strong>classe</strong>) des données (les <strong>attributs</strong>) et les traitements associés (les <strong>méthodes</strong>).</p>
             <div class="course-grid">
@@ -213,7 +217,9 @@ print("Tests Fraction validés !")`,
     },
     {
         id: "seance-2",
-        title: "Séance 2 : Récursivité",
+        tag: "Séance 2 • Algorithmique",
+        title: "Récursivité",
+        shortDesc: "Cas de base, appel récursif, terminaison (variant), pile d'appels et exponentiation rapide.",
         summary: `
             <p>Une fonction est dite <strong>récursive</strong> lorsqu'elle s'appelle elle-même dans sa propre définition. C'est un outil fondamental pour parcourir les arbres et concevoir des algorithmes « diviser pour régner ».</p>
             <div class="course-grid">
@@ -290,62 +296,84 @@ print("Tests exponentiation rapide validés !")`,
     }
 ];
 
-function renderNav() {
-    const nav = document.getElementById("session-nav");
-    nav.innerHTML = "";
-    sessionsData.forEach((session, index) => {
-        const btn = document.createElement("button");
-        btn.className = "nav-btn" + (index === 0 ? " active" : "");
-        btn.textContent = session.title;
-        btn.onclick = () => {
-            document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            renderSession(session);
-        };
-        nav.appendChild(btn);
+function renderSessionsGrid() {
+    const grid = document.getElementById("sessions-grid-view");
+    grid.innerHTML = "";
+
+    sessionsData.forEach((session) => {
+        const card = document.createElement("article");
+        card.className = "session-card";
+        card.innerHTML = `
+            <div>
+                <span class="card-tag">${session.tag}</span>
+                <h2>${session.title}</h2>
+                <p>${session.shortDesc}</p>
+            </div>
+            <div class="card-footer">
+                <span>${session.exercises.length} exercices types</span>
+                <span>Ouvrir →</span>
+            </div>
+        `;
+        card.onclick = () => openSession(session);
+        grid.appendChild(card);
     });
 }
 
-function renderSession(session) {
+function openSession(session) {
+    const gridView = document.getElementById("sessions-grid-view");
+    const detailView = document.getElementById("session-detail-view");
     const container = document.getElementById("course-container");
-    let exercisesHTML = "";
 
-    if (session.exercises.length === 0) {
-        exercisesHTML = `<p style="color: var(--text-muted); margin-top: 1rem;">Les exercices de cette séance seront ajoutés prochainement.</p>`;
-    } else {
-        session.exercises.forEach((exo) => {
-            exercisesHTML += `
-                <div class="exercise-box">
-                    <h4>${exo.title}</h4>
-                    <p style="margin-top: 0.5rem;">${exo.statement}</p>
-                    <div class="exercise-actions">
-                        <button class="btn-outline" onclick="loadCodeInEditor(\`${encodeURIComponent(exo.starterCode)}\`)">
-                            Charger dans l'éditeur Python
-                        </button>
-                        <button class="btn-secondary" onclick="toggleCorrection('${exo.id}')">
-                            Afficher / Masquer la correction
-                        </button>
-                    </div>
-                    <div id="corr-${exo.id}" class="correction-box">
-                        <strong>Proposition de correction :</strong>
-                        <pre class="code-block">${exo.solutionCode}</pre>
-                    </div>
+    gridView.classList.add("hidden");
+    detailView.classList.remove("hidden");
+
+    let exercisesHTML = "";
+    session.exercises.forEach((exo) => {
+        exercisesHTML += `
+            <div class="exercise-box">
+                <h4>${exo.title}</h4>
+                <p style="margin-top: 0.5rem;">${exo.statement}</p>
+                <div class="exercise-actions">
+                    <button class="btn-outline" onclick="loadCodeInEditor(\`${encodeURIComponent(exo.starterCode)}\`)">
+                        Charger dans l'éditeur Python
+                    </button>
+                    <button class="btn-secondary" onclick="toggleCorrection('${exo.id}')">
+                        Afficher / Masquer la correction
+                    </button>
                 </div>
-            `;
-        });
-    }
+                <div id="corr-${exo.id}" class="correction-box">
+                    <strong>Proposition de correction :</strong>
+                    <pre class="code-block">${exo.solutionCode}</pre>
+                </div>
+            </div>
+        `;
+    });
 
     container.innerHTML = `
+        <span class="badge">${session.tag}</span>
         <h2 class="session-title">${session.title}</h2>
         ${session.summary}
         <h3 style="margin-top: 1.5rem;">Exercices types</h3>
         ${exercisesHTML}
     `;
 
-    // Déclenche le rendu MathJax sur le nouveau contenu injecté
+    // Pré-charge automatiquement le premier exercice de la séance dans l'éditeur
+    if (session.exercises.length > 0) {
+        document.getElementById("python-editor").value = session.exercises[0].starterCode;
+        document.getElementById("python-output").textContent = "";
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     if (window.MathJax && window.MathJax.typesetPromise) {
         window.MathJax.typesetPromise([container]).catch((err) => console.error(err));
     }
+}
+
+function showGrid() {
+    document.getElementById("session-detail-view").classList.add("hidden");
+    document.getElementById("sessions-grid-view").classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 window.loadCodeInEditor = function(encodedCode) {
@@ -360,6 +388,6 @@ window.toggleCorrection = function(exoId) {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    renderNav();
-    renderSession(sessionsData[0]);
+    renderSessionsGrid();
+    document.getElementById("back-btn").addEventListener("click", showGrid);
 });
