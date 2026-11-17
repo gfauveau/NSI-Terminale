@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminale NSI : Récapitulatif des cours et exercices types</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Configuration MathJax pour le rendu des formules LaTeX inline ($...$) -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Pyodide pour l'exécution Python côté client -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+</head>
+<body>
+    <header class="glass-header">
+        <div class="header-content">
+            <span class="badge">NSI • Terminale</span>
+            <h1>Terminale : récapitulatif des cours et exercices types</h1>
+            <p class="subtitle">Fiches de synthèse, entraînement type Bac et console Python interactive</p>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Menu latéral des séances -->
+        <aside class="sidebar glass-panel">
+            <h2>Progression</h2>
+            <nav id="session-nav">
+                <!-- Généré dynamiquement par app.js -->
+            </nav>
+        </aside>
+
+        <!-- Zone principale : Cours & Exercices -->
+        <main class="content-area">
+            <section id="course-container" class="glass-panel">
+                <!-- Contenu de la séance active -->
+            </section>
+
+            <!-- IDE Python interactif -->
+            <section class="ide-container glass-panel">
+                <div class="ide-header">
+                    <h3>Bac à sable Python (Pyodide)</h3>
+                    <div class="ide-actions">
+                        <span id="pyodide-status" class="status-loading">Chargement de Python...</span>
+                        <button id="run-btn" class="btn-primary" disabled>▶ Exécuter</button>
+                        <button id="clear-btn" class="btn-secondary">Effacer console</button>
+                    </div>
+                </div>
+                <textarea id="python-editor" spellcheck="false" placeholder="# Écris ou charge un exercice ici..."></textarea>
+                <div class="console-wrapper">
+                    <div class="console-label">Sortie console :</div>
+                    <pre id="python-output"></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="python-ide.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
