@@ -1715,6 +1715,535 @@ doctest.testmod()</pre>
             }
         ],
         exercises: []
+    },
+    {
+        id: "seance-5",
+        tag: "Séance 5 • Structures Linéaires",
+        title: "Listes, Piles & Files",
+        shortDesc: "Interface vs implémentation, listes chaînées vs tableaux dynamiques, Piles (LIFO), Files (FIFO, 2 piles, pointeurs tête/queue), QCM et 5 exercices types.",
+        summary: `
+            <!-- MODULE 1 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 1</span>
+                    <h3>Interface vs Implémentation (Abstraction)</h3>
+                </div>
+                <p>Une <strong>structure de données linéaire</strong> organise une collection d'éléments de manière séquentielle, sans hiérarchie interne. Pour concevoir des programmes modulaires, on sépare toujours le point de vue de l'utilisateur de celui du concepteur :</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Interface (point de vue Utilisateur)</h4>
+                        <p>Ensemble des opérations abstraites autorisées pour manipuler la structure (ex. <code>empiler</code>, <code>depiler</code>, <code>est_vide</code>).</p>
+                        <p><em>Règle Bac :</em> On ne doit jamais accéder directement aux attributs internes (comme <code>p.data</code>) si une interface est fournie.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Implémentation (point de vue Concepteur)</h4>
+                        <p>Choix technique du stockage en mémoire (tableau dynamique <code>list</code>, maillons chaînés, double pile).</p>
+                        <p>Grâce à l'encapsulation en POO, on peut changer l'implémentation sans modifier le code des utilisateurs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Listes Chaînées vs Tableaux Dynamiques (Python <code>list</code>)</h3>
+                </div>
+                <p>Contrairement à ce que son nom suggère, le type <code>list</code> de Python n'est pas une liste chaînée mais un <strong>tableau dynamique</strong> dont les éléments sont contigus en mémoire. À l'inverse, une <strong>liste chaînée</strong> est constituée de maillons (cellules) reliés par des références mémoire.</p>
+                <div class="two-col-grid">
+                    <pre class="code-block">class Cellule:
+    """Maillon d'une liste chaînée."""
+    def __init__(self, contenu, suivante=None):
+        self.contenu = contenu
+        self.suivante = suivante
+
+# Liste chaînée : 3 -> 5 -> 1 -> None
+lst = Cellule(3, Cellule(5, Cellule(1, None)))
+print(lst.contenu)           # 3 (Tête)
+print(lst.suivante.contenu)  # 5</pre>
+                    <table class="course-table" style="margin: 0;">
+                        <thead>
+                            <tr>
+                                <th>Opération</th>
+                                <th>Liste Chaînée</th>
+                                <th>Tableau (<code>list</code>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Accès au $k$-ième élément</td>
+                                <td>$O(n)$ (parcours)</td>
+                                <td><strong>$O(1)$</strong> (indexation)</td>
+                            </tr>
+                            <tr>
+                                <td>Ajout / Retrait en <strong>tête</strong></td>
+                                <td><strong>$O(1)$</strong></td>
+                                <td>$O(n)$ (décalages)</td>
+                            </tr>
+                            <tr>
+                                <td>Ajout / Retrait en <strong>fin</strong></td>
+                                <td>$O(n)$ (ou $O(1)$ avec pointeur fin)</td>
+                                <td><strong>$O(1)$ amorti</strong> (<code>append</code> / <code>pop</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Les Piles (Stacks — Mode LIFO)</h3>
+                </div>
+                <p>Une <strong>pile</strong> fonctionne selon le principe <strong>LIFO</strong> (<em>Last In, First Out</em> — Dernier Entré, Premier Sorti), comme une pile d'assiettes : on insère (<code>empiler</code>) et on retire (<code>depiler</code>) uniquement au <strong>sommet</strong>. Applications : bouton « Retour » du navigateur, fonction « Annuler » (Ctrl+Z), pile d'appels récursifs, Notation Polonaise Inversée (NPI).</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Implémentation 1 : avec une <code>list</code> Python</h4>
+                        <pre class="code-block">class Pile:
+    def __init__(self):
+        self.data = []
+
+    def est_vide(self):
+        return len(self.data) == 0
+
+    def empile(self, x):
+        self.data.append(x)  # Sommet à droite : O(1)
+
+    def depile(self):
+        assert not self.est_vide(), "Pile vide"
+        return self.data.pop()  # O(1)</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Implémentation 2 : avec une Liste Chaînée</h4>
+                        <pre class="code-block">class PileChainee:
+    def __init__(self):
+        self.sommet = None  # Tête de chaîne
+
+    def est_vide(self):
+        return self.sommet is None
+
+    def empile(self, val):
+        self.sommet = Cellule(val, self.sommet)  # O(1)
+
+    def depile(self):
+        assert not self.est_vide(), "Pile vide"
+        v = self.sommet.contenu
+        self.sommet = self.sommet.suivante  # O(1)
+        return v</pre>
+                    </div>
+                </div>
+                <div class="callout-warning">
+                    <strong>Règle d'or en algorithmique sur les Piles/Files :</strong> Parcourir une pile pour compter ses éléments ou chercher une valeur la vide ! Il faut systématiquement utiliser une <strong>pile temporaire</strong> pour restaurer la pile d'origine dans son ordre initial.
+                </div>
+            </div>
+
+            <!-- MODULE 4 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 4</span>
+                    <h3>Les Files (Queues — Mode FIFO)</h3>
+                </div>
+                <p>Une <strong>file</strong> fonctionne selon le principe <strong>FIFO</strong> (<em>First In, First Out</em> — Premier Entré, Premier Sorti), comme une file d'attente : on ajoute en <strong>queue</strong> (<code>enfiler</code>) et on retire en <strong>tête</strong> (<code>defiler</code>). Applications : file d'impression, ordonnancement des processus, parcours en largeur (BFS) d'un graphe.</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Approche A : File à Deux Piles — $O(1)$ amorti</h4>
+                        <pre class="code-block">class FileDeuxPiles:
+    def __init__(self):
+        self.entree = Pile()
+        self.sortie = Pile()
+
+    def est_vide(self):
+        return self.entree.est_vide() and self.sortie.est_vide()
+
+    def enfile(self, x):
+        self.entree.empile(x)  # O(1)
+
+    def defile(self):
+        assert not self.est_vide(), "File vide"
+        if self.sortie.est_vide():
+            while not self.entree.est_vide():
+                self.sortie.empile(self.entree.depile())
+        return self.sortie.depile()</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Approche B : Pointeurs Tête & Queue — $O(1)$ strict</h4>
+                        <pre class="code-block">class FileChainee:
+    def __init__(self):
+        self.tete = None   # Sortie (défiler)
+        self.queue = None  # Entrée (enfiler)
+
+    def est_vide(self):
+        return self.tete is None
+
+    def enfile(self, val):
+        nouveau = Cellule(val)
+        if self.est_vide():
+            self.tete = nouveau
+        else:
+            self.queue.suivante = nouveau
+        self.queue = nouveau</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 5 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 5</span>
+                    <h3>Synthèse des Complexités & Mémento Bac</h3>
+                </div>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Structure</th>
+                            <th>Mode d'accès</th>
+                            <th>Insertion</th>
+                            <th>Suppression</th>
+                            <th>Accès élément $k$</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Pile (Stack)</strong></td>
+                            <td>LIFO</td>
+                            <td>$O(1)$ au sommet</td>
+                            <td>$O(1)$ au sommet</td>
+                            <td>Non autorisé ($O(n)$)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>File (Chaînée / 2 Piles)</strong></td>
+                            <td>FIFO</td>
+                            <td>$O(1)$ en queue</td>
+                            <td>$O(1)$ en tête</td>
+                            <td>Non autorisé ($O(n)$)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>File naïve (<code>list</code> Python)</strong></td>
+                            <td>FIFO</td>
+                            <td>$O(n)$ avec <code>insert(0, x)</code></td>
+                            <td>$O(1)$ avec <code>pop()</code></td>
+                            <td>$O(1)$ par index</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liste Chaînée</strong></td>
+                            <td>Séquentiel</td>
+                            <td>$O(1)$ en tête</td>
+                            <td>$O(1)$ en tête</td>
+                            <td>$O(n)$ par parcours</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tableau Dynamique (<code>list</code>)</strong></td>
+                            <td>Indexé contigu</td>
+                            <td>$O(1)$ amorti en fin</td>
+                            <td>$O(1)$ en fin</td>
+                            <td>$O(1)$ par index</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-success">
+                    <strong>Mémento Bac NSI :</strong>
+                    <ul class="checklist-list">
+                        <li>Retenir la dissymétrie des listes Python : <code>append()</code> et <code>pop()</code> en $O(1)$, contre <code>insert(0, x)</code> et <code>pop(0)</code> en $O(n)$.</li>
+                        <li>Toujours restaurer une pile ou une file après un parcours à l'aide d'une structure auxiliaire.</li>
+                        <li>Respecter strictement l'interface donnée dans l'énoncé sans manipuler la représentation interne.</li>
+                    </ul>
+                </div>
+            </div>
+        `,
+        qcm: [
+            {
+                question: "1. Quelle est la principale différence de complexité entre une liste chaînée et un tableau dynamique Python (<code>list</code>) ?",
+                options: [
+                    "La liste chaînée permet un accès direct au $k$-ième élément en $O(1)$",
+                    "Le tableau dynamique permet un accès direct par indice en $O(1)$, tandis que la liste chaînée permet une insertion en tête en $O(1)$",
+                    "Les deux structures ont exactement les mêmes complexités sur toutes les opérations",
+                    "L'insertion en tête d'une <code>list</code> Python via <code>insert(0, x)</code> s'effectue en $O(1)$"
+                ],
+                answer: 1,
+                explanation: "Dans un tableau contigu, calculer l'adresse de tab[k] est en O(1), mais insérer en tête impose de décaler n éléments (O(n)). Dans une liste chaînée, il suffit de modifier un pointeur en tête (O(1))."
+            },
+            {
+                question: "2. On empile successivement <code>10</code>, <code>20</code>, puis <code>30</code> dans une pile vide <code>p</code>. On dépile une fois, puis on empile <code>40</code>. Quel élément se trouve au sommet de <code>p</code> ?",
+                options: [
+                    "10",
+                    "20",
+                    "30",
+                    "40"
+                ],
+                answer: 3,
+                explanation: "La pile fonctionne en LIFO : [10] -> [10, 20] -> [10, 20, 30] -> dépile 30 -> [10, 20] -> empile 40 -> [10, 20, 40]. Le sommet est 40."
+            },
+            {
+                question: "3. On enfile successivement <code>'A'</code>, <code>'B'</code>, puis <code>'C'</code> dans une file vide <code>f</code>. Quel élément sera renvoyé par le premier appel à <code>f.defiler()</code> ?",
+                options: [
+                    "'A'",
+                    "'B'",
+                    "'C'",
+                    "None"
+                ],
+                answer: 0,
+                explanation: "Une file fonctionne en FIFO (First In, First Out) : le premier élément entré ('A') est le premier à sortir."
+            },
+            {
+                question: "4. Pourquoi déconseille-t-on d'implémenter une file avec une simple <code>list</code> Python en utilisant <code>enfile(x)</code> via <code>data.insert(0, x)</code> ?",
+                options: [
+                    "Parce que <code>insert(0, x)</code> génère une erreur si la liste est vide",
+                    "Parce que <code>insert(0, x)</code> décale tous les éléments existants en mémoire, ce qui a une complexité linéaire $O(n)$",
+                    "Parce que <code>pop()</code> ne fonctionne pas sur une liste",
+                    "Parce que les listes Python sont immuables"
+                ],
+                answer: 1,
+                explanation: "Insérer à l'indice 0 d'un tableau dynamique oblige Python à décaler toutes les cases d'un rang vers la droite : chaque enfilement coûte O(n) au lieu de O(1)."
+            },
+            {
+                question: "5. Comment fonctionne une file implémentée à l'aide de deux piles (<code>entree</code> et <code>sortie</code>) lorsque l'on appelle <code>defiler()</code> alors que <code>sortie</code> est vide ?",
+                options: [
+                    "On renvoie directement le sommet de la pile <code>entree</code>",
+                    "On dépile tous les éléments de <code>entree</code> pour les empiler dans <code>sortie</code> (ce qui inverse leur ordre), puis on dépile le sommet de <code>sortie</code>",
+                    "On vide les deux piles et on lève une erreur",
+                    "On échange les noms des deux piles"
+                ],
+                answer: 1,
+                explanation: "Transvaser la pile entree dans la pile sortie inverse l'ordre LIFO une seconde fois, rétablissant ainsi l'ordre FIFO d'arrivée des éléments."
+            },
+            {
+                question: "6. Quelle structure de données linéaire est naturellement utilisée par l'algorithme de parcours en largeur (BFS) d'un graphe ou d'un arbre ?",
+                options: [
+                    "Une pile (LIFO)",
+                    "Une file (FIFO)",
+                    "Un tuple immuable",
+                    "Un ensemble non ordonné"
+                ],
+                answer: 1,
+                explanation: "Le parcours en largeur explore les sommets par ordre de distance croissante (niveau par niveau), ce qui correspond exactement au traitement premier arrivé, premier servi d'une file FIFO."
+            }
+        ],
+        exercises: [
+            {
+                id: "exo-5-1",
+                title: "Exercice 1 (Listes chaînées) : Longueur et recherche dans une chaîne de Cellules",
+                statement: `On utilise la classe <code>Cellule(contenu, suivante)</code>. Écrire deux fonctions récursives ou itératives :
+                <br>1. <code>longueur_liste(lst)</code> qui renvoie le nombre de maillons de la liste chaînée <code>lst</code> (0 si <code>lst is None</code>).
+                <br>2. <code>contient(lst, cible)</code> qui renvoie <code>True</code> si <code>cible</code> apparaît dans la liste chaînée et <code>False</code> sinon.`,
+                starterCode: `class Cellule:
+    def __init__(self, contenu, suivante=None):
+        self.contenu = contenu
+        self.suivante = suivante
+
+def longueur_liste(lst: Cellule) -> int:
+    # À compléter
+    pass
+
+def contient(lst: Cellule, cible) -> bool:
+    # À compléter
+    pass
+
+# Tests
+ma_liste = Cellule(10, Cellule(20, Cellule(30, None)))
+assert longueur_liste(None) == 0
+assert longueur_liste(ma_liste) == 3
+assert contient(ma_liste, 20) == True
+assert contient(ma_liste, 99) == False
+print("Exercice 1 validé !")`,
+                solutionCode: `class Cellule:
+    def __init__(self, contenu, suivante=None):
+        self.contenu = contenu
+        self.suivante = suivante
+
+def longueur_liste(lst: Cellule) -> int:
+    if lst is None:
+        return 0
+    return 1 + longueur_liste(lst.suivante)
+
+def contient(lst: Cellule, cible) -> bool:
+    courant = lst
+    while courant is not None:
+        if courant.contenu == cible:
+            return True
+        courant = courant.suivante
+    return False`
+            },
+            {
+                id: "exo-5-2",
+                title: "Exercice 2 (Manipulation sans destruction) : Hauteur d'une Pile",
+                statement: `En utilisant <strong>uniquement l'interface publique</strong> de la classe <code>Pile</code> (<code>est_vide()</code>, <code>empile(x)</code>, <code>depile()</code>), écrire une fonction <code>hauteur_pile(p)</code> qui renvoie le nombre d'éléments de <code>p</code> tout en restituant <code>p</code> dans son état exact d'origine à la fin de la fonction.`,
+                starterCode: `class Pile:
+    def __init__(self):
+        self.__data = []
+    def est_vide(self) -> bool:
+        return len(self.__data) == 0
+    def empile(self, x) -> None:
+        self.__data.append(x)
+    def depile(self):
+        assert not self.est_vide(), "Pile vide"
+        return self.__data.pop()
+
+def hauteur_pile(p: Pile) -> int:
+    # Utiliser une pile temporaire p_temp pour compter puis restaurer p
+    pass
+
+# Tests
+p = Pile()
+for val in [1, 2, 3, 4]:
+    p.empile(val)
+assert hauteur_pile(p) == 4
+assert p.depile() == 4  # Vérifie que l'ordre d'origine est intact
+assert hauteur_pile(p) == 3
+print("Hauteur calculée et pile préservée !")`,
+                solutionCode: `def hauteur_pile(p: Pile) -> int:
+    p_temp = Pile()
+    compteur = 0
+    while not p.est_vide():
+        p_temp.empile(p.depile())
+        compteur += 1
+    while not p_temp.est_vide():
+        p.empile(p_temp.depile())
+    return compteur`
+            },
+            {
+                id: "exo-5-3",
+                title: "Exercice 3 (Application classique des Piles) : Vérification du bon parenthésage",
+                statement: `Écrire une fonction <code>est_bien_parenthesee(expression)</code> qui prend une chaîne contenant des parenthèses <code>'('</code>, <code>')'</code> et des crochets <code>'['</code>, <code>']'</code> (ainsi que d'autres caractères) et renvoie <code>True</code> si chaque ouvrant est correctement fermé dans le bon ordre, et <code>False</code> sinon.`,
+                starterCode: `class Pile:
+    def __init__(self):
+        self.data = []
+    def est_vide(self):
+        return len(self.data) == 0
+    def empile(self, x):
+        self.data.append(x)
+    def depile(self):
+        return self.data.pop()
+
+def est_bien_parenthesee(expression: str) -> bool:
+    p = Pile()
+    # Parcourir chaque caractère de expression :
+    # - si '(' ou '[' : empiler
+    # - si ')' ou ']' : vérifier que la pile n'est pas vide et que le sommet correspond
+    # À la fin, la pile doit être vide !
+    pass
+
+# Tests
+assert est_bien_parenthesee("(a + [b * (c - d)])") == True
+assert est_bien_parenthesee("([)]") == False
+assert est_bien_parenthesee("((a + b)") == False
+assert est_bien_parenthesee("a + b)") == False
+print("Vérification de parenthésage validée !")`,
+                solutionCode: `def est_bien_parenthesee(expression: str) -> bool:
+    p = Pile()
+    correspondance = {')': '(', ']': '['}
+    for car in expression:
+        if car in "([":
+            p.empile(car)
+        elif car in ")]":
+            if p.est_vide() or p.depile() != correspondance[car]:
+                return False
+    return p.est_vide()`
+            },
+            {
+                id: "exo-5-4",
+                title: "Exercice 4 (Application des Piles) : Calculatrice en Notation Polonaise Inversée (NPI)",
+                statement: `En Notation Polonaise Inversée (ex. <code>["3", "4", "+", "2", "*"]</code> qui vaut $(3 + 4) \\times 2 = 14$), chaque nombre est empilé, et chaque opérateur (<code>"+"</code>, <code>"-"</code>, <code>"*"</code>) dépile deux opérandes <code>b</code> puis <code>a</code>, calcule <code>a op b</code> et empile le résultat. Compléter la fonction <code>evaluer_npi(tokens)</code>.`,
+                starterCode: `class Pile:
+    def __init__(self):
+        self.data = []
+    def empile(self, x):
+        self.data.append(x)
+    def depile(self):
+        return self.data.pop()
+
+def evaluer_npi(tokens: list[str]) -> int:
+    p = Pile()
+    # Attention à l'ordre des opérandes pour la soustraction :
+    # si on lit ["10", "3", "-"], le résultat est 10 - 3 = 7 !
+    pass
+
+# Tests
+assert evaluer_npi(["3", "4", "+", "2", "*"]) == 14
+assert evaluer_npi(["10", "3", "-"]) == 7
+assert evaluer_npi(["5", "1", "2", "+", "4", "*", "+", "3", "-"]) == 14
+print("Calculatrice NPI validée !")`,
+                solutionCode: `def evaluer_npi(tokens: list[str]) -> int:
+    p = Pile()
+    for token in tokens:
+        if token in {"+", "-", "*"}:
+            b = p.depile()
+            a = p.depile()
+            if token == "+":
+                p.empile(a + b)
+            elif token == "-":
+                p.empile(a - b)
+            else:
+                p.empile(a * b)
+        else:
+            p.empile(int(token))
+    return p.depile()`
+            },
+            {
+                id: "exo-5-5",
+                title: "Exercice 5 (Implémentation d'une File) : File à Deux Piles",
+                statement: `Compléter la classe <code>FileDeuxPiles</code> utilisant deux instances de <code>Pile</code> (<code>entree</code> et <code>sortie</code>) afin de réaliser les opérations <code>est_vide()</code>, <code>enfile(x)</code> et <code>defile()</code> en temps $O(1)$ amorti.`,
+                starterCode: `class Pile:
+    def __init__(self):
+        self.data = []
+    def est_vide(self):
+        return len(self.data) == 0
+    def empile(self, x):
+        self.data.append(x)
+    def depile(self):
+        return self.data.pop()
+
+class FileDeuxPiles:
+    def __init__(self):
+        self.entree = Pile()
+        self.sortie = Pile()
+
+    def est_vide(self) -> bool:
+        # À compléter
+        pass
+
+    def enfile(self, x) -> None:
+        # À compléter
+        pass
+
+    def defile(self):
+        assert not self.est_vide(), "File vide"
+        # Si sortie est vide, transvaser entree dans sortie
+        # Dépiler et renvoyer le sommet de sortie
+        pass
+
+# Tests
+f = FileDeuxPiles()
+assert f.est_vide() == True
+f.enfile("Client 1")
+f.enfile("Client 2")
+f.enfile("Client 3")
+assert f.defile() == "Client 1"
+f.enfile("Client 4")
+assert f.defile() == "Client 2"
+assert f.defile() == "Client 3"
+assert f.defile() == "Client 4"
+assert f.est_vide() == True
+print("File à deux piles validée !")`,
+                solutionCode: `class FileDeuxPiles:
+    def __init__(self):
+        self.entree = Pile()
+        self.sortie = Pile()
+
+    def est_vide(self) -> bool:
+        return self.entree.est_vide() and self.sortie.est_vide()
+
+    def enfile(self, x) -> None:
+        self.entree.empile(x)
+
+    def defile(self):
+        assert not self.est_vide(), "File vide"
+        if self.sortie.est_vide():
+            while not self.entree.est_vide():
+                self.sortie.empile(self.entree.depile())
+        return self.sortie.depile()`
+            }
+        ]
     }
 ];
 
