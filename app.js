@@ -1,54 +1,290 @@
 const sessionsData = [
     {
         id: "seance-0",
-        tag: "Séance 0 • Prérequis",
+        tag: "Séance 0 • Révisions 1re",
         title: "Récapitulatif des bases de 1re",
-        shortDesc: "Types construits (listes, tuples, dictionnaires), parcours, spécifications, tests et algorithmes fondamentaux.",
+        shortDesc: "Types construits, mutabilité, parcours, dictionnaires, complexités des tris et dichotomie, QCM bilan et exercices.",
         summary: `
+            <!-- MODULE 1 -->
             <div class="lesson-module">
                 <div class="lesson-module-header">
-                    <span class="module-num">Rappels</span>
-                    <h3>Les 4 piliers de Première NSI à maîtriser</h3>
+                    <span class="module-num">Module 1</span>
+                    <h3>Types de base, Mutabilité et Références mémoire</h3>
                 </div>
-                <p>Avant d'aborder la programmation orientée objet, la récursivité et les structures arborescentes, 
-                cette séance consolide les fondamentaux indispensables pour l'épreuve pratique et écrite.</p>
-                <div class="course-grid">
+                <p>En Python, toute variable pointe vers un objet en mémoire. La distinction entre types <strong>immuables</strong> (non modifiables après création) et <strong>mutables</strong> (modifiables sur place) est cruciale pour éviter les effets de bord lors des passages de paramètres dans une fonction.</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Type Python</th>
+                            <th>Syntaxe</th>
+                            <th>Mutabilité</th>
+                            <th>Opérations clés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Entier / Flottant / Booléen</strong></td>
+                            <td><code>42</code>, <code>3.14</code>, <code>True</code></td>
+                            <td>Immuable</td>
+                            <td><code>//</code> (quotient entier), <code>%</code> (reste), <code>**</code> (puissance)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chaîne (<code>str</code>)</strong></td>
+                            <td><code>"NSI"</code></td>
+                            <td>Immuable</td>
+                            <td><code>len(s)</code>, <code>s[i]</code>, tranches <code>s[1:4]</code>, <code>s.split()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tuple (<code>tuple</code>)</strong></td>
+                            <td><code>(12, 45)</code></td>
+                            <td>Immuable</td>
+                            <td>Dépaquetage : <code>x, y = coord</code> (idéal pour renvoyer plusieurs valeurs)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liste / Tableau (<code>list</code>)</strong></td>
+                            <td><code>[4, 5, 2]</code></td>
+                            <td><strong>Mutable</strong></td>
+                            <td><code>tab[i] = v</code>, <code>tab.append(x)</code>, <code>tab.pop()</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dictionnaire (<code>dict</code>)</strong></td>
+                            <td><code>{"a": 1, "b": 2}</code></td>
+                            <td><strong>Mutable</strong></td>
+                            <td>Accès en $O(1)$ : <code>d[cle]</code>, <code>cle in d</code>, <code>d.keys()</code>, <code>d.values()</code>, <code>d.items()</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-warning">
+                    <strong>Piège classique de copie :</strong> Écrire <code>b = a</code> sur une liste ne crée pas une nouvelle liste, mais un <strong>alias</strong> (deux noms pointant vers le même tableau en mémoire). Pour copier réellement un tableau à une dimension, on utilise <code>b = a.copy()</code> ou <code>b = list(a)</code>.
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Boucles, Parcours et Listes en compréhension</h3>
+                </div>
+                <p>Choisir le bon mode de parcours rend le code plus lisible et limite les erreurs d'indice (<code>IndexError</code>).</p>
+                <div class="two-col-grid">
                     <div class="concept-card">
-                        <h4>1. Types construits</h4>
-                        <p><strong>Listes :</strong> mutables, indexées dès 0 (<code>tab[i]</code>, <code>tab.append(x)</code>).</p>
-                        <p><strong>Tuples :</strong> non mutables (<code>coord = (x, y)</code>).</p>
-                        <p><strong>Dictionnaires :</strong> clé/valeur en $O(1)$ moyen (<code>d.items()</code>).</p>
+                        <h4>Parcours par valeur vs par indice</h4>
+                        <pre class="code-block"># 1. Par valeur (lecture seule)
+for note in notes:
+    somme += note
+
+# 2. Par indice (modification ou comparaison)
+for i in range(len(notes) - 1):
+    if notes[i] > notes[i + 1]:
+        trie = False</pre>
                     </div>
                     <div class="concept-card">
-                        <h4>2. Parcours & Compréhensions</h4>
-                        <p>Par valeur : <code>for elt in tab:</code></p>
-                        <p>Par indice : <code>for i in range(len(tab)):</code></p>
-                        <p>Compréhension : <code>[x**2 for x in range(10) if x % 2 == 0]</code></p>
-                    </div>
-                    <div class="concept-card">
-                        <h4>3. Spécification & Tests</h4>
-                        <p>Documenter le rôle, les paramètres et le type de retour (<code>docstring</code> + annotations de type).</p>
-                        <p>Vérifier les préconditions et cas limites avec <code>assert</code>.</p>
-                    </div>
-                    <div class="concept-card">
-                        <h4>4. Algorithmes de référence</h4>
-                        <p>Recherche d'extremum, moyenne, dichotomie dans un tableau trié ($O(\\log_2 n)$), tris par insertion et sélection ($O(n^2)$).</p>
+                        <h4>Dictionnaires & Compréhensions</h4>
+                        <pre class="code-block"># Parcours complet d'un dictionnaire
+for cle, val in stock.items():
+    print(f"{cle} : {val}")
+
+# Liste en compréhension avec filtre
+pairs = [x**2 for x in range(10) if x % 2 == 0]</pre>
                     </div>
                 </div>
             </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Spécification, Programmation défensive et Tests</h3>
+                </div>
+                <p>En Terminale (notamment lors de l'épreuve pratique), toute fonction écrite doit être proprement spécifiée et testée sur les cas généraux comme sur les <strong>cas limites</strong> (tableau vide, un seul élément, valeur absente).</p>
+                <div class="two-col-grid">
+                    <pre class="code-block">def moyenne(tab: list[float]) -> float:
+    """
+    Calcule la moyenne des éléments de tab.
+    Précondition : tab est non vide.
+    """
+    assert len(tab) > 0, "Tableau vide interdit"
+    return sum(tab) / len(tab)</pre>
+                    <div class="concept-card">
+                        <h4>Les 3 réflexes qualité</h4>
+                        <p>• <strong>Annotations de type :</strong> indiquer les types attendus des paramètres et du retour (<code>-> float</code>).</p>
+                        <p>• <strong>Docstring :</strong> décrire le rôle de la fonction et ses préconditions.</p>
+                        <p>• <strong>Jeu de tests <code>assert</code> :</strong> vérifier le comportement attendu sans modifier le code de la fonction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 4 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 4</span>
+                    <h3>Complexités et Algorithmes de référence de 1re</h3>
+                </div>
+                <p>La <strong>complexité temporelle</strong> mesure l'évolution du nombre d'opérations élémentaires en fonction de la taille $n$ des données en entrée dans le pire des cas.</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Algorithme</th>
+                            <th>Précondition</th>
+                            <th>Complexité (pire cas)</th>
+                            <th>Principe & Invariant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Recherche séquentielle / Extremum</strong></td>
+                            <td>Aucune</td>
+                            <td>$O(n)$ (linéaire)</td>
+                            <td>Parcours complet du tableau élément par élément.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tri par sélection</strong></td>
+                            <td>Aucune</td>
+                            <td>$O(n^2)$ (quadratique)</td>
+                            <td>À chaque étape $i$, on cherche le minimum dans <code>tab[i:]</code> et on l'échange avec <code>tab[i]</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tri par insertion</strong></td>
+                            <td>Aucune</td>
+                            <td>$O(n^2)$ (pire cas)<br>$O(n)$ (déjà trié)</td>
+                            <td>À chaque étape $i$, on insère <code>tab[i]</code> à sa place dans la partie gauche déjà triée <code>tab[:i]</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recherche dichotomique</strong></td>
+                            <td><strong>Tableau trié</strong></td>
+                            <td>$O(\\log_2 n)$ (logarithmique)</td>
+                            <td>On divise par 2 l'intervalle de recherche <code>[debut, fin]</code> à chaque itération.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Algorithmes gloutons</strong></td>
+                            <td>Problème d'optimisation</td>
+                            <td>Dépend du tri ($O(n \\log n)$)</td>
+                            <td>Choix localement optimal à chaque étape (ex. rendu de monnaie, sac à dos fractionnaire).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MODULE 5 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 5</span>
+                    <h3>Représentation des données & Architecture</h3>
+                </div>
+                <div class="course-grid">
+                    <div class="concept-card">
+                        <h4>Entiers & Binaire</h4>
+                        <p>• Sur $n$ bits non signés : valeurs de $0$ à $2^n - 1$.</p>
+                        <p>• Sur $n$ bits en <strong>complément à 2</strong> (signés) : de $-2^{n-1}$ à $2^{n-1} - 1$.</p>
+                        <p>• Hexadécimal : 1 chiffre hexa = 4 bits (un quartet).</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Flottants (IEEE 754)</h4>
+                        <p>Les nombres décimaux comme $0.1$ n'ont pas d'écriture binaire finie : <code>0.1 + 0.2 == 0.3</code> vaut <code>False</code>. On compare toujours deux flottants à $\\varepsilon$ près : <code>abs(a - b) < 1e-9</code>.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Tables CSV & Réseaux</h4>
+                        <p>• Tables : projection (colonnes), sélection (lignes), tri par clé (<code>sorted(table, key=...)</code>).</p>
+                        <p>• Réseaux : adresse IPv4 + masque de sous-réseau (<code>ET</code> logique bit à bit).</p>
+                    </div>
+                </div>
+                <div class="callout-success">
+                    <strong>Checklist de validation Séance 0 :</strong>
+                    <ul class="checklist-list">
+                        <li>Savoir parcourir un tableau par indice ou par valeur et construire un dictionnaire d'occurrences.</li>
+                        <li>Distinguer les types mutables (<code>list</code>, <code>dict</code>) des types immuables (<code>tuple</code>, <code>str</code>).</li>
+                        <li>Connaître les complexités : $O(1)$ (accès dictionnaire), $O(\\log_2 n)$ (dichotomie), $O(n)$ (parcours), $O(n^2)$ (tris quadratiques).</li>
+                        <li>Savoir écrire et vérifier un invariant de boucle ainsi que des assertions de test.</li>
+                    </ul>
+                </div>
+            </div>
         `,
+        qcm: [
+            {
+                question: "1. Quelle est l'affichage produit par le code suivant ?<br><code>a = [1, 2, 3]<br>b = a<br>b.append(4)<br>print(a)</code>",
+                options: [
+                    "[1, 2, 3]",
+                    "[1, 2, 3, 4]",
+                    "Une erreur TypeError",
+                    "[4]"
+                ],
+                answer: 1,
+                explanation: "Les listes sont mutables : b = a crée un alias vers la même liste en mémoire. Modifier b modifie donc également a."
+            },
+            {
+                question: "2. Quelle structure de données permet de tester l'appartenance d'une clé (<code>cle in structure</code>) en temps constant $O(1)$ en moyenne ?",
+                options: [
+                    "Une liste (list)",
+                    "Un tuple (tuple)",
+                    "Un dictionnaire (dict)",
+                    "Une chaîne de caractères (str)"
+                ],
+                answer: 2,
+                explanation: "Grâce aux tables de hachage, la recherche d'une clé dans un dictionnaire Python s'effectue en $O(1)$ moyen, contre $O(n)$ dans une liste."
+            },
+            {
+                question: "3. Quelle est la complexité dans le pire des cas de la recherche dichotomique dans un tableau trié de $n$ éléments ?",
+                options: [
+                    "$O(1)$",
+                    "$O(\\log_2 n)$",
+                    "$O(n)$",
+                    "$O(n^2)$"
+                ],
+                answer: 1,
+                explanation: "À chaque étape, la taille de la zone de recherche est divisée par 2 : il faut au plus $\\lfloor \\log_2(n) \\rfloor + 1$ étapes (ex. 10 étapes maximum pour 1024 éléments)."
+            },
+            {
+                question: "4. Parmi les instructions suivantes, laquelle déclenche une erreur <code>TypeError</code> ?",
+                options: [
+                    "<code>t = (1, 2, 3); x = t[0]</code>",
+                    "<code>s = 'bonjour'; s[0] = 'B'</code>",
+                    "<code>d = {'a': 1}; d['b'] = 2</code>",
+                    "<code>L = [10, 20]; L[1] = 30</code>"
+                ],
+                answer: 1,
+                explanation: "Les chaînes de caractères (str) et les tuples sont immuables en Python : on ne peut pas modifier un caractère sur place par affectation."
+            },
+            {
+                question: "5. Sur 8 bits en complément à 2, quel est l'intervalle des entiers relatifs représentables ?",
+                options: [
+                    "De $0$ à $255$",
+                    "De $-127$ à $+127$",
+                    "De $-128$ à $+127$",
+                    "De $-256$ à $+255$"
+                ],
+                answer: 2,
+                explanation: "Sur $n = 8$ bits signés en complément à 2, l'intervalle est $[-2^{n-1}, 2^{n-1}-1]$, soit $[-128, +127]$ (256 valeurs au total)."
+            },
+            {
+                question: "6. Quelle est la particularité du tri par insertion lorsque le tableau en entrée est déjà trié ?",
+                options: [
+                    "Sa complexité reste quadratique en $O(n^2)$",
+                    "Sa complexité devient linéaire en $O(n)$",
+                    "Il échoue avec une erreur d'indice",
+                    "Sa complexité devient logarithmique en $O(\\log_2 n)$"
+                ],
+                answer: 1,
+                explanation: "Si le tableau est déjà trié, la boucle interne while du tri par insertion s'arrête immédiatement à chaque tour : il n'y a que $n - 1$ comparaisons, soit $O(n)$."
+            }
+        ],
         exercises: [
             {
                 id: "exo-0-1",
-                title: "Exercice type 1 : Parcours et dictionnaire d'occurrences",
-                statement: `Écrire une fonction <code>compter_occurrences(chaine)</code> qui prend en paramètre une chaîne de caractères non vide et renvoie un dictionnaire associant à chaque caractère son nombre d'apparitions.`,
+                title: "Exercice 1 (Dictionnaires) : Comptage d'occurrences et élément majoritaire",
+                statement: `Écrire une fonction <code>compter_occurrences(chaine)</code> qui renvoie un dictionnaire associant à chaque caractère son nombre d'apparitions dans <code>chaine</code>, puis une fonction <code>plus_frequent(chaine)</code> renvoyant le caractère ayant le plus grand nombre d'occurrences.`,
                 starterCode: `def compter_occurrences(chaine: str) -> dict:
+    # À compléter
+    pass
+
+def plus_frequent(chaine: str) -> str:
+    assert len(chaine) > 0, "La chaîne doit être non vide"
     # À compléter
     pass
 
 # Tests
 assert compter_occurrences("abracadabra") == {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
-print("Tests validés !")`,
+assert plus_frequent("abracadabra") == 'a'
+print("Exercice 1 validé !")`,
                 solutionCode: `def compter_occurrences(chaine: str) -> dict:
     occurrences = {}
     for caractere in chaine:
@@ -56,11 +292,20 @@ print("Tests validés !")`,
             occurrences[caractere] += 1
         else:
             occurrences[caractere] = 1
-    return occurrences`
+    return occurrences
+
+def plus_frequent(chaine: str) -> str:
+    assert len(chaine) > 0, "La chaîne doit être non vide"
+    occ = compter_occurrences(chaine)
+    max_car = chaine[0]
+    for car, nb in occ.items():
+        if nb > occ[max_car]:
+            max_car = car
+    return max_car`
             },
             {
                 id: "exo-0-2",
-                title: "Exercice type 2 : Recherche dichotomique",
+                title: "Exercice 2 (Complexité $O(\\log_2 n)$) : Recherche dichotomique",
                 statement: `Écrire une fonction <code>recherche_dichotomique(tab, cible)</code> qui renvoie l'indice de <code>cible</code> dans un tableau trié par ordre croissant, ou <code>-1</code> si l'élément est absent.`,
                 starterCode: `def recherche_dichotomique(tab: list, cible: int) -> int:
     debut = 0
@@ -71,6 +316,7 @@ print("Tests validés !")`,
 # Tests
 assert recherche_dichotomique([2, 5, 8, 12, 16, 23, 38, 56], 23) == 5
 assert recherche_dichotomique([2, 5, 8, 12, 16, 23, 38, 56], 10) == -1
+assert recherche_dichotomique([], 5) == -1
 print("Dichotomie validée !")`,
                 solutionCode: `def recherche_dichotomique(tab: list, cible: int) -> int:
     debut = 0
@@ -84,6 +330,33 @@ print("Dichotomie validée !")`,
         else:
             fin = milieu - 1
     return -1`
+            },
+            {
+                id: "exo-0-3",
+                title: "Exercice 3 (Algorithme de tri) : Tri par sélection sur place",
+                statement: `Compléter la fonction <code>tri_selection(tab)</code> qui trie le tableau <code>tab</code> par ordre croissant sur place. À chaque étape <code>i</code>, rechercher l'indice <code>ind_min</code> du plus petit élément dans la sous-liste <code>tab[i:]</code> puis échanger <code>tab[i]</code> et <code>tab[ind_min]</code>.`,
+                starterCode: `def tri_selection(tab: list) -> None:
+    n = len(tab)
+    for i in range(n - 1):
+        ind_min = i
+        # Rechercher l'indice du minimum à droite de i
+        # Échanger tab[i] et tab[ind_min]
+        pass
+
+# Tests
+exemple = [29, 10, 14, 37, 13]
+tri_selection(exemple)
+assert exemple == [10, 13, 14, 29, 37]
+print("Tableau trié :", exemple)
+print("Tri par sélection validé !")`,
+                solutionCode: `def tri_selection(tab: list) -> None:
+    n = len(tab)
+    for i in range(n - 1):
+        ind_min = i
+        for j in range(i + 1, n):
+            if tab[j] < tab[ind_min]:
+                ind_min = j
+        tab[i], tab[ind_min] = tab[ind_min], tab[i]`
             }
         ]
     },
@@ -692,6 +965,7 @@ function renderSessionsGrid() {
     grid.innerHTML = "";
 
     sessionsData.forEach((session) => {
+        const qcmBadge = session.qcm ? ` • ${session.qcm.length} QCM` : "";
         const card = document.createElement("article");
         card.className = "session-card";
         card.innerHTML = `
@@ -701,13 +975,54 @@ function renderSessionsGrid() {
                 <p>${session.shortDesc}</p>
             </div>
             <div class="card-footer">
-                <span>${session.exercises.length} exercices types</span>
+                <span>${session.exercises.length} exercices${qcmBadge}</span>
                 <span>Ouvrir →</span>
             </div>
         `;
         card.onclick = () => openSession(session);
         grid.appendChild(card);
     });
+}
+
+function buildQcmHTML(session) {
+    if (!session.qcm || session.qcm.length === 0) return "";
+
+    let itemsHTML = "";
+    session.qcm.forEach((item, qIdx) => {
+        let optionsHTML = "";
+        item.options.forEach((opt, optIdx) => {
+            optionsHTML += `
+                <label class="qcm-option" id="opt-${session.id}-${qIdx}-${optIdx}">
+                    <input type="radio" name="qcm-${session.id}-${qIdx}" value="${optIdx}">
+                    <span>${opt}</span>
+                </label>
+            `;
+        });
+
+        itemsHTML += `
+            <div class="qcm-item">
+                <div class="qcm-question">${item.question}</div>
+                <div class="qcm-options">${optionsHTML}</div>
+                <div class="qcm-explanation" id="exp-${session.id}-${qIdx}">
+                    <strong>Explication :</strong> ${item.explanation}
+                </div>
+            </div>
+        `;
+    });
+
+    return `
+        <h3 class="exercises-section-title">QCM d'auto-évaluation (Prérequis 1re)</h3>
+        <div class="qcm-container" id="qcm-box-${session.id}">
+            ${itemsHTML}
+            <div class="qcm-footer">
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button class="btn-run" onclick="checkQcm('${session.id}')">✓ Vérifier mes réponses</button>
+                    <button class="btn-reset" onclick="resetQcm('${session.id}')">↺ Réinitialiser le QCM</button>
+                </div>
+                <span class="qcm-score-badge" id="score-${session.id}"></span>
+            </div>
+        </div>
+    `;
 }
 
 function openSession(session) {
@@ -719,6 +1034,7 @@ function openSession(session) {
     detailView.classList.remove("hidden");
 
     const disabledAttr = isPyodideReady ? "" : "disabled";
+    const qcmHTML = buildQcmHTML(session);
     let exercisesHTML = "";
 
     session.exercises.forEach((exo) => {
@@ -752,6 +1068,7 @@ function openSession(session) {
         <span class="badge">${session.tag}</span>
         <h2 class="session-title">${session.title}</h2>
         ${session.summary}
+        ${qcmHTML}
         <h3 class="exercises-section-title">Exercices types à compléter</h3>
         ${exercisesHTML}
     `;
@@ -766,6 +1083,59 @@ function openSession(session) {
         window.MathJax.typesetPromise([container]).catch((err) => console.error(err));
     }
 }
+
+window.checkQcm = function(sessionId) {
+    const session = sessionsData.find(s => s.id === sessionId);
+    if (!session || !session.qcm) return;
+
+    let score = 0;
+    session.qcm.forEach((item, qIdx) => {
+        const selected = document.querySelector(`input[name="qcm-${sessionId}-${qIdx}"]:checked`);
+        item.options.forEach((_, optIdx) => {
+            const label = document.getElementById(`opt-${sessionId}-${qIdx}-${optIdx}`);
+            label.classList.remove("correct-answer", "wrong-answer");
+            if (optIdx === item.answer) {
+                label.classList.add("correct-answer");
+            }
+        });
+
+        if (selected) {
+            const chosen = parseInt(selected.value, 10);
+            if (chosen === item.answer) {
+                score++;
+            } else {
+                const wrongLabel = document.getElementById(`opt-${sessionId}-${qIdx}-${chosen}`);
+                wrongLabel.classList.add("wrong-answer");
+            }
+        }
+
+        const exp = document.getElementById(`exp-${sessionId}-${qIdx}`);
+        if (exp) exp.classList.add("visible");
+    });
+
+    const scoreEl = document.getElementById(`score-${sessionId}`);
+    if (scoreEl) {
+        scoreEl.textContent = `Score : ${score} / ${session.qcm.length}`;
+    }
+};
+
+window.resetQcm = function(sessionId) {
+    const session = sessionsData.find(s => s.id === sessionId);
+    if (!session || !session.qcm) return;
+
+    session.qcm.forEach((item, qIdx) => {
+        document.querySelectorAll(`input[name="qcm-${sessionId}-${qIdx}"]`).forEach(r => r.checked = false);
+        item.options.forEach((_, optIdx) => {
+            const label = document.getElementById(`opt-${sessionId}-${qIdx}-${optIdx}`);
+            label.classList.remove("correct-answer", "wrong-answer");
+        });
+        const exp = document.getElementById(`exp-${sessionId}-${qIdx}`);
+        if (exp) exp.classList.remove("visible");
+    });
+
+    const scoreEl = document.getElementById(`score-${sessionId}`);
+    if (scoreEl) scoreEl.textContent = "";
+};
 
 function showGrid() {
     document.getElementById("session-detail-view").classList.add("hidden");
