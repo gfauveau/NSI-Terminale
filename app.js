@@ -1216,7 +1216,280 @@ print("Tours de Hanoï validées !")`,
         hanoi(n - 1, intermediaire, depart, arrivee, coups)`
             }
         ]
-    }
+    },
+    {
+        id: "seance-3",
+        tag: "Séance 3 • Théorie & Histoire",
+        title: "Décidabilité, Calculabilité & Histoire",
+        shortDesc: "Programme comme donnée, problème de l'arrêt (Turing & Church), langages Turing-complets, pionnières de l'informatique (Ada Lovelace, Grace Hopper, Margaret Hamilton) et QCM.",
+        summary: `
+            <!-- MODULE 1 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 1</span>
+                    <h3>Un programme comme donnée d'un autre programme</h3>
+                </div>
+                <p>Lorsque nous exécutons un script Python via la commande <code>python3 test.py</code> dans un terminal, le fichier <code>test.py</code> n'est rien d'autre qu'une <strong>chaîne de caractères</strong> (un code-source) passée en paramètre d'entrée à un autre programme : l'interpréteur <code>python3</code>.</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Dualité Code / Donnée</h4>
+                        <p>• Tout programme peut être manipulé comme une simple <strong>donnée</strong> par un autre programme (compilateur, interpréteur, antivirus, analyseur syntaxique).</p>
+                        <p>• Un programme peut même recevoir son <strong>propre code-source</strong> en entrée : c'est le principe des <em>quines</em> (programmes qui affichent leur propre code sans lire de fichier).</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Exemple de Quine en Python</h4>
+                        <pre class="code-block">a = 'a = %r; print(a %% a)'
+print(a % a)
+
+# Ce programme affiche exactement
+# son propre code-source !</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Le Problème de l'Arrêt (Indécidabilité)</h3>
+                </div>
+                <p>Peut-on écrire un programme universel <code>halt(prog, x)</code> capable d'analyser n'importe quel programme <code>prog</code> et son entrée <code>x</code> pour prédire à coup sûr s'il va s'arrêter (<code>True</code>) ou boucler à l'infini (<code>False</code>) ?</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Démonstration par l'absurde (Alan Turing, 1936)</h4>
+                        <p>Supposons que <code>halt(prog, x)</code> existe. Construisons le programme « paradoxal » <code>sym</code> :</p>
+                        <pre class="code-block">def sym(prog):
+    if halt(prog, prog) == True:
+        while True:
+            pass  # Boucle infinie
+    else:
+        return 1  # S'arrête</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h4>La contradiction sur <code>sym(sym)</code></h4>
+                        <p>• <strong>Cas 1 :</strong> Si <code>halt(sym, sym)</code> renvoie <code>True</code> (donc <code>sym(sym)</code> est censé s'arrêter), alors <code>sym(sym)</code> entre dans la boucle infinie <code>while True</code>. <strong>Contradiction !</strong></p>
+                        <p>• <strong>Cas 2 :</strong> Si <code>halt(sym, sym)</code> renvoie <code>False</code> (donc <code>sym(sym)</code> est censé boucler), alors <code>sym(sym)</code> renvoie <code>1</code> et s'arrête. <strong>Contradiction !</strong></p>
+                    </div>
+                </div>
+                <div class="callout-warning">
+                    <strong>Théorème de l'arrêt (Indécidabilité) :</strong> L'hypothèse de départ est fausse : il ne peut pas exister de programme universel capable de décider si n'importe quel programme s'arrête sur une entrée donnée. Plus généralement (<strong>Théorème de Rice</strong>), toute propriété sémantique non triviale d'un programme (« va-t-il renvoyer 0 ? », « va-t-il lever une erreur ? ») est <strong>indécidable</strong>.
+                </div>
+            </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Calculabilité, Machines de Turing & Classes P / NP</h3>
+                </div>
+                <p>En 1936, <strong>Alan Turing</strong> (via son modèle abstrait de <em>machine de Turing</em> lisant et écrivant des symboles sur un ruban infini) et <strong>Alonzo Church</strong> (via le <em>lambda-calcul</em>) démontrent indépendamment que certaines fonctions mathématiques ne sont <strong>pas calculables</strong> par un algorithme, répondant ainsi par la négative au problème de la décision (<em>Entscheidungsproblem</em>) posé par David Hilbert en 1928.</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Notion théorique</th>
+                            <th>Définition & Portée</th>
+                            <th>Exemples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Langage Turing-complet</strong></td>
+                            <td>Langage capable de simuler n'importe quelle machine de Turing. Tous les langages généraux ont exactement le même pouvoir de calcul.</td>
+                            <td>Python, C, Java, Scratch, Haskell, Brainfuck</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Problème indécidable</strong></td>
+                            <td>Problème de décision (réponse Oui/Non) pour lequel aucun algorithme ne peut toujours donner la bonne réponse en temps fini.</td>
+                            <td>Problème de l'arrêt, équivalence de deux programmes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Classe P (Hors-Programme)</strong></td>
+                            <td>Problèmes résolubles par un algorithme déterministe en temps <strong>polynomial</strong> ($O(n)$, $O(n^2)$, $O(n^k)$).</td>
+                            <td>Tri d'une liste, recherche dichotomique, test de primalité AKS</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Classe NP (Hors-Programme)</strong></td>
+                            <td>Problèmes dont on sait <strong>vérifier</strong> une solution proposée en temps polynomial ($P \\subseteq NP$, question ouverte $P = NP$ ?).</td>
+                            <td>Sudoku, problème du voyageur de commerce, sac à dos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MODULE 4 : POINT HISTOIRE -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Point Histoire</span>
+                    <h3>Trois pionnières entrées dans l'histoire de l'informatique</h3>
+                </div>
+                <p>Bien avant les ordinateurs modernes, et jusqu'à la conquête spatiale, des femmes ont posé les fondations théoriques et logicielles de l'informatique :</p>
+                <div class="course-grid">
+                    <div class="concept-card">
+                        <h4>Ada Lovelace (1815 – 1852)</h4>
+                        <p><strong>Première programmeuse de l'histoire :</strong> fille du poète Lord Byron et formée par le logicien Auguste De Morgan, elle collabore avec Charles Babbage sur la <em>machine analytique</em>.</p>
+                        <p>Dans sa célèbre <strong>Note G</strong>, elle rédige le premier véritable algorithme destiné à être exécuté par une machine (calcul des nombres de Bernoulli) et pressent que les machines manipuleront bien plus que des nombres.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Grace Hopper (1906 – 1992)</h4>
+                        <p><strong>Compilateurs & COBOL :</strong> engagée dans la Navy sur les calculateurs <em>Mark I</em> et <em>Mark II</em> (où son équipe popularise le terme <strong>bug</strong> à la suite d'un papillon de nuit coincé dans un relais), elle conçoit l'un des premiers compilateurs (<strong>FLOW-MATIC</strong>) et inspire le langage <strong>COBOL</strong>.</p>
+                        <p>Habituée à programmer en <strong>base 8 (octal)</strong>, elle y effectuait même ses calculs du quotidien !</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Margaret Hamilton (née en 1936)</h4>
+                        <p><strong>Ingénierie logicielle & Apollo 11 :</strong> après avoir collaboré avec Edward Lorenz sur la modélisation météo (théorie du chaos), elle dirige au MIT l'équipe du logiciel de vol des missions <strong>Apollo</strong>.</p>
+                        <p>Son système de <strong>gestion dynamique des priorités</strong> a sauvé l'alunissage d'Apollo 11 en 1969 face à une surcharge de calculs. Elle a forgé le terme <em>software engineering</em>.</p>
+                    </div>
+                </div>
+                <div class="callout-success">
+                    <strong>Synthèse Séance 3 :</strong>
+                    <ul class="checklist-list">
+                        <li>Comprendre qu'un programme est une suite de caractères pouvant servir de donnée à un autre programme.</li>
+                        <li>Savoir expliquer pourquoi le <strong>problème de l'arrêt</strong> est indécidable (démonstration d'Alan Turing, 1936).</li>
+                        <li>Savoir ce qu'est un langage <strong>Turing-complet</strong> et citer les apports d'<strong>Ada Lovelace</strong>, <strong>Grace Hopper</strong> et <strong>Margaret Hamilton</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        `,
+        qcm: [
+            {
+                question: "1. Que démontre le théorème de l'arrêt établi par Alan Turing en 1936 ?",
+                options: [
+                    "Tout programme Python finit toujours par s'arrêter si on lui laisse assez de mémoire",
+                    "Il est impossible d'écrire un programme universel capable de déterminer si n'importe quel programme s'arrête sur une entrée donnée",
+                    "Seuls les langages compilés permettent d'éviter les boucles infinies",
+                    "Un programme ne peut jamais recevoir son propre code-source en paramètre"
+                ],
+                answer: 1,
+                explanation: "Par un raisonnement par l'absurde (construction d'un programme paradoxal prenant son propre code en entrée), Turing prouve que le problème de l'arrêt est indécidable."
+            },
+            {
+                question: "2. Dire que Python, C et Scratch sont des langages « Turing-complets » signifie que :",
+                options: [
+                    "Ils s'exécutent exactement à la même vitesse sur un processeur",
+                    "Ils ont exactement le même pouvoir de calcul et peuvent résoudre les mêmes problèmes calculables",
+                    "Ils ont tous été inventés par Alan Turing",
+                    "Ils permettent de résoudre les problèmes indécidables"
+                ],
+                answer: 1,
+                explanation: "Tous les langages Turing-complets peuvent simuler une machine de Turing : la calculabilité d'un problème ne dépend donc pas du langage de programmation choisi."
+            },
+            {
+                question: "3. Qui est considérée comme l'auteure du tout premier programme informatique de l'histoire (Note G sur le calcul des nombres de Bernoulli) ?",
+                options: [
+                    "Margaret Hamilton",
+                    "Grace Hopper",
+                    "Ada Lovelace",
+                    "Katherine Johnson"
+                ],
+                answer: 2,
+                explanation: "En 1843, Ada Lovelace rédige dans sa Note G sur la machine analytique de Charles Babbage le premier algorithme détaillé destiné à être exécuté par une machine."
+            },
+            {
+                question: "4. À quelle pionnière doit-on les premiers compilateurs (FLOW-MATIC), la naissance du langage COBOL et la popularisation du terme « bug » ?",
+                options: [
+                    "Grace Hopper",
+                    "Ada Lovelace",
+                    "Margaret Hamilton",
+                    "Hedy Lamarr"
+                ],
+                answer: 0,
+                explanation: "Grace Murray Hopper a conçu l'éditeur de liens A-0 et le compilateur FLOW-MATIC (ancêtre de COBOL) et popularisé le mot « bug » avec l'équipe du calculateur Mark II."
+            },
+            {
+                question: "5. Quelle innovation de Margaret Hamilton a permis d'éviter l'échec de l'alunissage d'Apollo 11 en 1969 ?",
+                options: [
+                    "L'invention du premier microprocesseur en silicium",
+                    "Un système logiciel de gestion dynamique des priorités abandonnant les tâches secondaires en cas de surcharge",
+                    "Le passage des calculs de la base 8 à la base 16",
+                    "La création du langage Python"
+                ],
+                answer: 1,
+                explanation: "Lorsque le radar de rendez-vous a saturé l'ordinateur de bord d'Apollo 11, l'architecture asynchrone à gestion des priorités conçue par l'équipe de Margaret Hamilton a maintenu les tâches vitales d'alunissage."
+            }
+        ],
+        exercises: [
+            {
+                id: "exo-3-1",
+                title: "Exercice 1 (Analyse de terminaison) : Repérer les cas de non-arrêt",
+                statement: `On considère la fonction <code>compte_a_rebours(n)</code> ci-dessous.
+                <br>1. Exécuter le code pour observer son comportement.
+                <br>2. Modifier la condition d'arrêt (<code>while ...</code>) afin que la fonction s'arrête <strong>toujours</strong>, même si l'utilisateur passe un nombre flottant (ex. <code>10.8</code>) ou un entier négatif (ex. <code>-3</code>).`,
+                starterCode: `def compte_a_rebours(n):
+    # Condition actuelle fragile (boucle infinie si n = 10.8 ou n = -3) :
+    # À sécuriser !
+    while n > 0:
+        print(round(n, 2))
+        n = n - 1
+    print("Terminé !")
+
+# Tests
+compte_a_rebours(3)
+compte_a_rebours(3.8)
+compte_a_rebours(-5)
+print("Tous les appels se sont terminés !")`,
+                solutionCode: `def compte_a_rebours(n):
+    while n > 0:
+        print(round(n, 2))
+        n = n - 1
+    print("Terminé !")
+
+# Remarque : avec while n != 0:, n = 10.8 passe à 0.8 puis -0.2 sans jamais valoir 0.
+# Avec while n > 0:, la décroissance stricte garantit l'arrêt pour tout réel n.`
+            },
+            {
+                id: "exo-3-2",
+                title: "Exercice 2 (Programme comme donnée) : Évaluateur de mini-instructions",
+                statement: `Pour illustrer qu'un programme peut interpréter un autre programme sous forme de chaîne de caractères, écrire une fonction <code>executer_mini_langage(instructions, valeur_init)</code> qui prend une liste d'instructions textuelles parmi <code>"INC"</code> (+1), <code>"DEC"</code> (-1), <code>"DOUBLE"</code> (*2) et renvoie la valeur finale calculée à partir de <code>valeur_init</code>.`,
+                starterCode: `def executer_mini_langage(instructions: list[str], valeur_init: int) -> int:
+    acc = valeur_init
+    # Parcourir la liste instructions et appliquer chaque opération sur acc
+    # Lever une ValueError si une instruction est inconnue
+    return acc
+
+# Tests
+prog = ["INC", "DOUBLE", "INC", "DEC", "DOUBLE"]
+assert executer_mini_langage(prog, 4) == 20
+print("Résultat de l'interpréteur :", executer_mini_langage(prog, 4))
+print("Exercice 2 validé !")`,
+                solutionCode: `def executer_mini_langage(instructions: list[str], valeur_init: int) -> int:
+    acc = valeur_init
+    for instr in instructions:
+        if instr == "INC":
+            acc += 1
+        elif instr == "DEC":
+            acc -= 1
+        elif instr == "DOUBLE":
+            acc *= 2
+        else:
+            raise ValueError(f"Instruction inconnue : {instr}")
+    return acc`
+            },
+            {
+                id: "exo-3-3",
+                title: "Exercice 3 (Modèle de Turing) : Simulateur d'automate à ruban",
+                statement: `On modélise le ruban d'une machine de Turing par une liste de bits (<code>0</code> et <code>1</code>) et une tête de lecture à la position <code>pos = 0</code>. Écrire la fonction <code>inverser_ruban(ruban)</code> qui parcourt le ruban de gauche à droite en inversant chaque bit (<code>0</code> devient <code>1</code> et <code>1</code> devient <code>0</code>) jusqu'à atteindre la fin du ruban.`,
+                starterCode: `def inverser_ruban(ruban: list[int]) -> list[int]:
+    pos = 0
+    while pos < len(ruban):
+        # Inverser le bit sous la tête de lecture ruban[pos]
+        # Déplacer la tête d'une case vers la droite
+        pass
+    return ruban
+
+# Tests
+assert inverser_ruban([1, 0, 1, 1, 0]) == [0, 1, 0, 0, 1]
+assert inverser_ruban([]) == []
+print("Ruban inversé :", inverser_ruban([1, 0, 1, 1, 0]))
+print("Exercice 3 validé !")`,
+                solutionCode: `def inverser_ruban(ruban: list[int]) -> list[int]:
+    pos = 0
+    while pos < len(ruban):
+        ruban[pos] = 1 - ruban[pos]
+        pos += 1
+    return ruban`
+            }
+        ]
+    },
 ];
 
 function renderSessionsGrid() {
