@@ -1490,6 +1490,232 @@ print("Exercice 3 validé !")`,
             }
         ]
     },
+    {
+        id: "seance-4",
+        tag: "Séance 4 • Qualité & Tests",
+        title: "Bonnes pratiques de programmation",
+        shortDesc: "Norme PEP 8, conventions de nommage, docstrings, programmation défensive avec assert, méthode TDD et tests unitaires doctest.",
+        summary: `
+            <!-- MODULE 1 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 1</span>
+                    <h3>Conventions syntaxiques : la norme PEP 8</h3>
+                </div>
+                <p>En Python, le guide de style officiel s'appelle la <strong>PEP 8</strong> (<em>Python Enhancement Proposal 8</em>). Même si le non-respect de ces règles ne bloque pas toujours l'interpréteur, il rend le code difficile à relire et à maintenir en équipe.</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Gestion des espaces (typographie)</h4>
+                        <pre class="code-block"># À ÉVITER :
+a=3
+if color == (0,255,0) : print( 'vert' )
+
+# CONFORME PEP 8 :
+a = 3
+if color == (0, 255, 0):
+    print('vert')</pre>
+                        <p>• Une espace avant et après les opérateurs (<code>=</code>, <code>==</code>, <code>+</code>).<br>• Jamais d'espace juste après <code>(</code>, <code>[</code> ou avant <code>)</code>, <code>]</code>, <code>,</code>, <code>:</code>.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Conventions de nommage</h4>
+                        <table class="course-table" style="margin-top: 0.5rem;">
+                            <thead>
+                                <tr>
+                                    <th>Élément Python</th>
+                                    <th>Convention</th>
+                                    <th>Exemple</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Variables & fonctions</td>
+                                    <td><code>snake_case</code></td>
+                                    <td><code>taux_interet</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Indices de boucle</td>
+                                    <td>1 lettre</td>
+                                    <td><code>i</code>, <code>j</code>, <code>k</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Constantes</td>
+                                    <td><code>MAJUSCULES</code></td>
+                                    <td><code>TAILLE_MAX = 100</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Classes (POO)</td>
+                                    <td><code>PascalCase</code></td>
+                                    <td><code>CompteBancaire</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Commentaires utiles vs Docstrings</h3>
+                </div>
+                <p>Un code bien écrit doit avant tout être <strong>auto-documenté</strong> grâce à des noms de variables et de fonctions explicites : on évite les commentaires paraphrasant une instruction évidente. En revanche, toute fonction publique doit posséder une <strong>docstring</strong> (chaîne entre triples guillemets <code>"""..."""</code> placée juste après l'en-tête <code>def</code>) décrivant son rôle, ses paramètres et son retour.</p>
+                <div class="two-col-grid">
+                    <pre class="code-block">def capital_apres_n_annees(capital, taux, annees):
+    """
+    Renvoie le capital acquis après n années.
+    - capital (float) : montant initial
+    - taux (float) : taux annuel (ex: 0.02 pour 2 %)
+    - annees (int) : durée du placement
+    """
+    return capital * (1 + taux)**annees</pre>
+                    <div class="concept-card">
+                        <h4>Consulter une documentation en Python</h4>
+                        <p>Les docstrings sont conservées en mémoire dans l'attribut spécial <code>__doc__</code> de chaque fonction et sont affichées par la fonction native <code>help()</code> :</p>
+                        <pre class="code-block">>>> help(capital_apres_n_annees)
+>>> print(len.__doc__)</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Programmation défensive : sécuriser avec <code>assert</code></h3>
+                </div>
+                <p>La <strong>programmation défensive</strong> consiste à vérifier dès l'entrée d'une fonction que les arguments respectent bien les <strong>préconditions</strong> de la spécification, afin d'interrompre immédiatement le programme avec un message clair plutôt que de propager un calcul faux.</p>
+                <pre class="code-block">def moyenne_trimestrielle(liste_notes: list[float]) -> float:
+    """Calcule la moyenne des notes comprises entre 0 et 20."""
+    assert len(liste_notes) > 0, "Erreur : la liste de notes est vide"
+    assert min(liste_notes) >= 0 and max(liste_notes) <= 20, "Erreur : note hors [0, 20]"
+    return sum(liste_notes) / len(liste_notes)</pre>
+                <div class="callout-info">
+                    <strong>Syntaxe :</strong> <code>assert condition, "Message d'erreur explicite"</code>. Si <code>condition</code> vaut <code>False</code>, Python lève une exception <code>AssertionError</code> accompagnée du message.
+                </div>
+            </div>
+
+            <!-- MODULE 4 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 4</span>
+                    <h3>Stratégies de tests : TDD, Jeux d'assert et <code>doctest</code></h3>
+                </div>
+                <p>En programmation comme en mathématiques, <strong>un jeu de tests qui réussit ne prouve jamais à 100 % qu'un programme est exempt de bugs</strong> (il montre seulement que le code fonctionne sur les cas testés). En revanche, un test qui échoue prouve avec certitude l'existence d'une erreur à corriger.</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>1. Approche TDD (Test-Driven Development)</h4>
+                        <p>• <strong>Étape 1 :</strong> Écrire les tests (<code>assert</code>) avant même de coder la fonction (cas normaux + cas limites).</p>
+                        <p>• <strong>Étape 2 :</strong> Écrire le code minimal de la fonction pour faire passer tous les tests au vert.</p>
+                        <p>• <strong>Étape 3 :</strong> Refactoriser et optimiser le code en vérifiant que les tests restent validés.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>2. Tests intégrés avec le module <code>doctest</code></h4>
+                        <pre class="code-block">def compte_voyelles(mot: str) -> int:
+    """
+    Renvoie le nombre de voyelles de mot.
+    >>> compte_voyelles("python")
+    2
+    >>> compte_voyelles("HTTP")
+    0
+    """
+    return sum(1 for c in mot.lower() if c in "aeiouy")
+
+import doctest
+doctest.testmod()</pre>
+                    </div>
+                </div>
+                <div class="callout-success">
+                    <strong>Checklist Bac NSI :</strong>
+                    <ul class="checklist-list">
+                        <li>Nommer ses variables/fonctions en <code>snake_case</code> et ses classes en <code>PascalCase</code> (PEP 8).</li>
+                        <li>Rédiger une <code>docstring</code> claire et vérifier les préconditions avec <code>assert</code>.</li>
+                        <li>Construire des tests unitaires couvrant les cas généraux et les <strong>cas limites</strong> (liste vide, 0, négatif).</li>
+                    </ul>
+                </div>
+            </div>
+        `,
+        qcm: [
+            {
+                question: "1. Quelle écriture respecte la convention officielle PEP 8 pour le nommage d'une fonction et d'une classe en Python ?",
+                options: [
+                    "<code>def CalculerMoyenne():</code> et <code>class compte_bancaire:</code>",
+                    "<code>def calculer_moyenne():</code> et <code>class CompteBancaire:</code>",
+                    "<code>def calculerMoyenne():</code> et <code>class COMPTE_BANCAIRE:</code>",
+                    "<code>def calculer-moyenne():</code> et <code>class comptebancaire:</code>"
+                ],
+                answer: 1,
+                explanation: "En Python (PEP 8), les fonctions et variables s'écrivent en snake_case (minuscules séparées par des underscores) et les classes en PascalCase (majuscule à chaque mot)."
+            },
+            {
+                question: "2. Quelle ligne est typographiquement conforme aux règles d'espacement de la PEP 8 ?",
+                options: [
+                    "<code>if x>0 : print( x )</code>",
+                    "<code>if x > 0: print(x)</code>",
+                    "<code>if ( x > 0 ): print(x)</code>",
+                    "<code>if x > 0 : print(x)</code>"
+                ],
+                answer: 1,
+                explanation: "La PEP 8 impose une espace autour des opérateurs de comparaison (>), aucune espace avant les deux-points (:) ni à l'intérieur des parenthèses."
+            },
+            {
+                question: "3. Où doit être placée la docstring d'une fonction et comment la consulter en console ?",
+                options: [
+                    "Tout en bas du fichier avec <code># doc</code>, consultable via <code>dir(f)</code>",
+                    "Juste après la ligne <code>def ...:</code> entre triples guillemets <code>\"\"\"...\"\"\"</code>, consultable via <code>help(f)</code> ou <code>f.__doc__</code>",
+                    "Dans un fichier séparé nommé <code>readme.py</code>",
+                    "Uniquement dans le constructeur <code>__init__</code>"
+                ],
+                answer: 1,
+                explanation: "La docstring est la première instruction d'une fonction ou d'une classe entre triples guillemets ; Python la stocke dans l'attribut __doc__ et l'affiche avec help()."
+            },
+            {
+                question: "4. Que se passe-t-il lors de l'exécution de <code>assert x >= 0, 'x doit être positif'</code> si <code>x</code> vaut <code>-4</code> ?",
+                options: [
+                    "Python affiche un avertissement et continue l'exécution",
+                    "Python remplace automatiquement <code>x</code> par <code>0</code>",
+                    "Python interrompt le programme en levant une exception <code>AssertionError</code> avec le message indiqué",
+                    "Python renvoie <code>False</code>"
+                ],
+                answer: 2,
+                explanation: "L'instruction assert vérifie une condition logique : si elle est fausse, l'exécution s'arrête immédiatement avec une AssertionError."
+            },
+            {
+                question: "5. Quel est l'ordre exact des étapes dans la méthode de développement TDD (Test-Driven Development) ?",
+                options: [
+                    "Coder la fonction $\\rightarrow$ Optimiser le code $\\rightarrow$ Écrire les tests",
+                    "Écrire les tests (qui échouent) $\\rightarrow$ Coder la fonction pour valider les tests $\\rightarrow$ Refactoriser",
+                    "Écrire la docstring $\\rightarrow$ Supprimer les assertions $\\rightarrow$ Compiler",
+                    "Exécuter <code>doctest.testmod()</code> avant d'écrire les tests"
+                ],
+                answer: 1,
+                explanation: "En TDD, on formalise d'abord les spécifications sous forme de tests unitaires avant même d'implémenter le corps de la fonction."
+            },
+            {
+                question: "6. Comment le module <code>doctest</code> repère-t-il les tests à exécuter dans une docstring ?",
+                options: [
+                    "Il recherche le mot-clé <code>assert</code> dans les commentaires",
+                    "Il recherche les lignes commençant par les trois chevrons <code>>>></code> suivies du résultat attendu à la ligne suivante",
+                    "Il exécute toutes les fonctions dont le nom commence par <code>test_</code>",
+                    "Il analyse uniquement les annotations de type"
+                ],
+                answer: 1,
+                explanation: "doctest simule une session interactive Python en repérant les invites >>> dans la docstring et en comparant la sortie réelle avec la ligne attendue juste en dessous."
+            },
+            {
+                question: "7. Quelle affirmation concernant les tests logiciels est rigoureusement exacte ?",
+                options: [
+                    "Si 10 tests passent sans erreur, le programme est mathématiquement prouvé sans aucun bug",
+                    "Un jeu de tests qui réussit ne garantit pas l'absence totale de bugs, mais un test qui échoue prouve qu'il existe une erreur",
+                    "Il est inutile de tester les cas limites comme une liste vide ou zéro",
+                    "Les tests remplacent les préconditions"
+                ],
+                answer: 1,
+                explanation: "Comme un contre-exemple en mathématiques, un test échoué suffit à prouver un défaut, tandis que la réussite d'un échantillon fini de tests ne prouve pas la correction sur toutes les entrées possibles."
+            }
+        ],
+        exercises: []
+    }
 ];
 
 function renderSessionsGrid() {
@@ -1497,7 +1723,11 @@ function renderSessionsGrid() {
     grid.innerHTML = "";
 
     sessionsData.forEach((session) => {
-        const qcmBadge = session.qcm ? ` • ${session.qcm.length} QCM` : "";
+        const hasExercises = session.exercises && session.exercises.length > 0;
+        const countLabel = hasExercises
+            ? `${session.exercises.length} exercices${session.qcm ? ` • ${session.qcm.length} QCM` : ""}`
+            : `Fiche + ${session.qcm ? session.qcm.length + " QCM" : "Synthèse"}`;
+
         const card = document.createElement("article");
         card.className = "session-card";
         card.innerHTML = `
@@ -1507,7 +1737,7 @@ function renderSessionsGrid() {
                 <p>${session.shortDesc}</p>
             </div>
             <div class="card-footer">
-                <span>${session.exercises.length} exercices${qcmBadge}</span>
+                <span>${countLabel}</span>
                 <span>Ouvrir →</span>
             </div>
         `;
@@ -1543,7 +1773,7 @@ function buildQcmHTML(session) {
     });
 
     return `
-        <h3 class="exercises-section-title">QCM d'auto-évaluation (Prérequis 1re)</h3>
+        <h3 class="exercises-section-title">QCM d'auto-évaluation</h3>
         <div class="qcm-container" id="qcm-box-${session.id}">
             ${itemsHTML}
             <div class="qcm-footer">
@@ -1567,47 +1797,55 @@ function openSession(session) {
 
     const disabledAttr = isPyodideReady ? "" : "disabled";
     const qcmHTML = buildQcmHTML(session);
+    const hasExercises = session.exercises && session.exercises.length > 0;
     let exercisesHTML = "";
 
-    session.exercises.forEach((exo) => {
-        exercisesHTML += `
-            <div class="exercise-box">
-                <h4>${exo.title}</h4>
-                <p style="margin-top: 0.5rem;">${exo.statement}</p>
+    if (hasExercises) {
+        session.exercises.forEach((exo) => {
+            exercisesHTML += `
+                <div class="exercise-box">
+                    <h4>${exo.title}</h4>
+                    <p style="margin-top: 0.5rem;">${exo.statement}</p>
 
-                <div class="mini-ide">
-                    <div class="mini-ide-toolbar">
-                        <span class="mini-ide-label">Éditeur Python (Ctrl+Entrée pour exécuter)</span>
-                        <div class="mini-ide-buttons">
-                            <button class="btn-run" ${disabledAttr} onclick="runExerciseCode('${exo.id}')">▶ Exécuter</button>
-                            <button class="btn-reset" onclick="resetExerciseCode('${exo.id}')">↺ Réinitialiser</button>
-                            <button class="btn-corr" onclick="toggleCorrection('${exo.id}')">Correction</button>
+                    <div class="mini-ide">
+                        <div class="mini-ide-toolbar">
+                            <span class="mini-ide-label">Éditeur Python (Ctrl+Entrée pour exécuter)</span>
+                            <div class="mini-ide-buttons">
+                                <button class="btn-run" ${disabledAttr} onclick="runExerciseCode('${exo.id}')">▶ Exécuter</button>
+                                <button class="btn-reset" onclick="resetExerciseCode('${exo.id}')">↺ Réinitialiser</button>
+                                <button class="btn-corr" onclick="toggleCorrection('${exo.id}')">Correction</button>
+                            </div>
                         </div>
+                        <textarea id="editor-${exo.id}"></textarea>
+                        <div id="output-${exo.id}" class="mini-console">Prêt à exécuter...</div>
                     </div>
-                    <textarea id="editor-${exo.id}"></textarea>
-                    <div id="output-${exo.id}" class="mini-console">Prêt à exécuter...</div>
-                </div>
 
-                <div id="corr-${exo.id}" class="correction-box">
-                    <strong>Proposition de correction :</strong>
-                    <pre class="code-block">${exo.solutionCode}</pre>
+                    <div id="corr-${exo.id}" class="correction-box">
+                        <strong>Proposition de correction :</strong>
+                        <pre class="code-block">${exo.solutionCode}</pre>
+                    </div>
                 </div>
-            </div>
-        `;
-    });
+            `;
+        });
+    }
+
+    const exercisesBlockHTML = hasExercises
+        ? `<h3 class="exercises-section-title">Exercices types à compléter</h3>${exercisesHTML}`
+        : "";
 
     container.innerHTML = `
         <span class="badge">${session.tag}</span>
         <h2 class="session-title">${session.title}</h2>
         ${session.summary}
         ${qcmHTML}
-        <h3 class="exercises-section-title">Exercices types à compléter</h3>
-        ${exercisesHTML}
+        ${exercisesBlockHTML}
     `;
 
-    session.exercises.forEach((exo) => {
-        window.createExerciseEditor(exo.id, exo.starterCode);
-    });
+    if (hasExercises) {
+        session.exercises.forEach((exo) => {
+            window.createExerciseEditor(exo.id, exo.starterCode);
+        });
+    }
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
