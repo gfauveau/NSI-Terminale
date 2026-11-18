@@ -375,4 +375,71 @@ pre.code-block {
 
 .btn-corr:hover {
     background: rgba(56, 189, 248, 0.25);
+/* Tableaux et encarts pédagogiques du cours */
+.course-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    background: rgba(15, 23, 42, 0.65);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.course-table th, .course-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.course-table th {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.callout-box {
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-size: 0.94rem;
+}
+
+.callout-warning {
+    background: rgba(251, 191, 36, 0.08);
+    border-left: 4px solid #fbbf24;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-size: 0.94rem;
+}
+
+.module-title {
+    font-size: 1.18rem;
+    color: #e2e8f0;
+    margin: 1.75rem 0 0.75rem 0;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.checklist-list {
+    list-style: none;
+    margin-top: 0.75rem;
+}
+
+.checklist-list li {
+    padding: 0.35rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.checklist-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success);
+    font-weight: bold;
+}
 }
