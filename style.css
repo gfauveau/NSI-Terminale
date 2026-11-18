@@ -403,4 +403,119 @@ pre.code-block {
 
 .mini-ide {
     margin-top: 1.25rem;
-    border: 1px solid var(--glass-border
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0b1120;
+}
+
+.mini-ide-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(30, 41, 59, 0.9);
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mini-ide-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.mini-ide-buttons {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+
+.CodeMirror {
+    height: auto !important;
+    min-height: 155px;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    background: #0b1120 !important;
+}
+
+.CodeMirror-gutters {
+    background: #0f172a !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.mini-console {
+    background: #020617;
+    border-top: 1px solid var(--glass-border);
+    padding: 0.85rem 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.86rem;
+    color: #34d399;
+    white-space: pre-wrap;
+    min-height: 46px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.mini-console.error {
+    color: var(--danger);
+}
+
+.correction-box {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 10px;
+}
+
+.correction-box.visible {
+    display: block;
+}
+
+/* Boutons */
+.btn-run, .btn-reset, .btn-corr {
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.84rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-run {
+    background: var(--success);
+    color: #022c22;
+}
+
+.btn-run:hover:not(:disabled) {
+    background: #34d399;
+}
+
+.btn-run:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-reset {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.btn-reset:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-corr {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: var(--accent);
+}
+
+.btn-corr:hover {
+    background: rgba(56, 189, 248, 0.25);
+}

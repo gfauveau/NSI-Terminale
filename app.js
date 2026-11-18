@@ -379,4 +379,406 @@ print("Exercice 1 validé !")`,
     def distance_origine(self) -> float:
         return (self.x**2 + self.y**2)**0.5
 
-    def __str__(self)
+    def __str__(self) -> str:
+        return f"({self.x}, {self.y})"`
+            },
+            {
+                id: "exo-1-2",
+                title: "Exercice 2 (Encapsulation & Getters/Setters) : Classe Joueur",
+                statement: `En suivant le principe d'encapsulation, compléter la classe <code>Joueur</code> possédant les attributs <code>nom</code>, <code>_club</code> et <code>_age</code>. Implémenter le getter <code>get_club()</code> et le setter <code>mutation(nouveau_club)</code> qui vérifie avec <code>assert</code> que <code>nouveau_club</code> est une chaîne non vide.`,
+                starterCode: `class Joueur:
+    def __init__(self, nom: str, club: str, age: int):
+        self.nom = nom
+        self._club = club
+        self._age = age
+
+    def get_club(self) -> str:
+        # À compléter
+        pass
+
+    def mutation(self, nouveau_club: str) -> None:
+        # Vérifier que nouveau_club est non vide puis mettre à jour _club
+        pass
+
+# Tests
+j = Joueur("Nans Ducuing", "UBB", 34)
+assert j.get_club() == "UBB"
+j.mutation("Perpignan")
+assert j.get_club() == "Perpignan"
+print(f"{j.nom} joue désormais à {j.get_club()}.")
+print("Exercice 2 validé !")`,
+                solutionCode: `class Joueur:
+    def __init__(self, nom: str, club: str, age: int):
+        self.nom = nom
+        self._club = club
+        self._age = age
+
+    def get_club(self) -> str:
+        return self._club
+
+    def mutation(self, nouveau_club: str) -> None:
+        assert isinstance(nouveau_club, str) and len(nouveau_club) > 0, "Club invalide"
+        self._club = nouveau_club`
+            },
+            {
+                id: "exo-1-3",
+                title: "Exercice 3 (Méthodes spéciales) : Fraction avec __repr__ et __eq__",
+                statement: `On reprend la classe <code>Fraction(num, den)</code>.
+                <br>1. Redéfinir <code>__repr__(self)</code> pour afficher <code>"num/den"</code>, ou uniquement <code>"num"</code> si <code>den == 1</code>.
+                <br>2. Redéfinir <code>__eq__(self, autre)</code> pour que <code>f1 == f2</code> renvoie <code>True</code> si les fractions sont mathématiquement égales (produit en croix).`,
+                starterCode: `class Fraction:
+    def __init__(self, num: int, den: int):
+        assert den > 0, "Dénominateur strictement positif requis"
+        self.numerateur = num
+        self.denominateur = den
+
+    def __repr__(self) -> str:
+        # À compléter
+        pass
+
+    def __eq__(self, autre: object) -> bool:
+        # À compléter
+        pass
+
+# Tests
+f1 = Fraction(3, 4)
+f2 = Fraction(6, 8)
+f3 = Fraction(5, 1)
+assert repr(f1) == "3/4"
+assert repr(f3) == "5"
+assert f1 == f2
+assert not (f1 == f3)
+print("f1 =", f1, "| f3 =", f3, "| f1 == f2 :", f1 == f2)
+print("Exercice 3 validé !")`,
+                solutionCode: `class Fraction:
+    def __init__(self, num: int, den: int):
+        assert den > 0, "Dénominateur strictement positif requis"
+        self.numerateur = num
+        self.denominateur = den
+
+    def __repr__(self) -> str:
+        if self.denominateur == 1:
+            return str(self.numerateur)
+        return f"{self.numerateur}/{self.denominateur}"
+
+    def __eq__(self, autre: object) -> bool:
+        if not isinstance(autre, Fraction):
+            return False
+        return self.numerateur * autre.denominateur == self.denominateur * autre.numerateur`
+            },
+            {
+                id: "exo-1-4",
+                title: "Exercice 4 (Surcharge d'opérateurs) : Vecteur 2D et __add__",
+                statement: `Compléter la classe <code>Vecteur(x, y)</code> en surchargeant l'opérateur <code>+</code> via <code>__add__(self, autre)</code> (en vérifiant avec <code>assert isinstance(autre, Vecteur)</code> que l'opérande est bien un vecteur).`,
+                starterCode: `class Vecteur:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def __str__(self) -> str:
+        return f"Vecteur({self.x}, {self.y})"
+
+    def __eq__(self, autre: object) -> bool:
+        return isinstance(autre, Vecteur) and self.x == autre.x and self.y == autre.y
+
+    def __add__(self, autre: 'Vecteur') -> 'Vecteur':
+        # À compléter
+        pass
+
+# Tests
+v1 = Vecteur(1, 2)
+v2 = Vecteur(-3, 4)
+v3 = v1 + v2
+assert v3 == Vecteur(-2, 6)
+print("v1 + v2 =", v3)
+print("Exercice 4 validé !")`,
+                solutionCode: `class Vecteur:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def __str__(self) -> str:
+        return f"Vecteur({self.x}, {self.y})"
+
+    def __eq__(self, autre: object) -> bool:
+        return isinstance(autre, Vecteur) and self.x == autre.x and self.y == autre.y
+
+    def __add__(self, autre: 'Vecteur') -> 'Vecteur':
+        assert isinstance(autre, Vecteur), "On ne peut additionner que deux Vecteurs"
+        return Vecteur(self.x + autre.x, self.y + autre.y)`
+            },
+            {
+                id: "exo-1-5",
+                title: "Exercice 5 (Composition d'objets) : Segment composé de deux Points",
+                statement: `En utilisant la composition d'objets, créer une classe <code>Segment</code> dont le constructeur reçoit deux instances de <code>Point</code> (<code>p1</code> et <code>p2</code>). Écrire la méthode <code>longueur(self)</code> calculant la distance $\\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$ et la méthode <code>milieu(self)</code> renvoyant une nouvelle instance de <code>Point</code>.`,
+                starterCode: `class Point:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+class Segment:
+    def __init__(self, p1: Point, p2: Point):
+        # À compléter
+        pass
+
+    def longueur(self) -> float:
+        # À compléter
+        pass
+
+    def milieu(self) -> Point:
+        # À compléter
+        pass
+
+# Tests
+a = Point(1, 2)
+b = Point(5, 5)
+seg = Segment(a, b)
+assert seg.longueur() == 5.0
+m = seg.milieu()
+assert isinstance(m, Point) and m.x == 3.0 and m.y == 3.5
+print(f"Longueur : {seg.longueur()} | Milieu : ({m.x}, {m.y})")
+print("Exercice 5 validé !")`,
+                solutionCode: `class Point:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+class Segment:
+    def __init__(self, p1: Point, p2: Point):
+        self.p1 = p1
+        self.p2 = p2
+
+    def longueur(self) -> float:
+        return ((self.p2.x - self.p1.x)**2 + (self.p2.y - self.p1.y)**2)**0.5
+
+    def milieu(self) -> Point:
+        return Point((self.p1.x + self.p2.x) / 2, (self.p1.y + self.p2.y) / 2)`
+            },
+            {
+                id: "exo-1-6",
+                title: "Exercice 6 (Héritage & Polymorphisme) : Hiérarchie de Véhicules",
+                statement: `On donne la classe mère <code>Vehicule(marque, modele, vitesse_max)</code>. Créer une classe fille <code>Voiture(Vehicule)</code> possédant un attribut supplémentaire <code>portes</code> (int). Utiliser <code>super().__init__(...)</code> dans son constructeur et redéfinir <code>__str__(self)</code> pour ajouter <code>", X portes"</code> à la chaîne renvoyée par la classe mère.`,
+                starterCode: `class Vehicule:
+    def __init__(self, marque: str, modele: str, vitesse_max: int):
+        self.marque = marque
+        self.modele = modele
+        self.vitesse_max = vitesse_max
+
+    def __str__(self) -> str:
+        return f"{self.marque} {self.modele} (Vmax: {self.vitesse_max} km/h)"
+
+class Voiture(Vehicule):
+    def __init__(self, marque: str, modele: str, vitesse_max: int, nb_portes: int):
+        # À compléter avec super()
+        pass
+
+    def __str__(self) -> str:
+        # À compléter avec super().__str__()
+        pass
+
+# Tests
+v1 = Voiture("Renault", "Clio", 160, 5)
+assert isinstance(v1, Voiture) and isinstance(v1, Vehicule)
+assert str(v1) == "Renault Clio (Vmax: 160 km/h), 5 portes"
+print(v1)
+print("Exercice 6 validé !")`,
+                solutionCode: `class Vehicule:
+    def __init__(self, marque: str, modele: str, vitesse_max: int):
+        self.marque = marque
+        self.modele = modele
+        self.vitesse_max = vitesse_max
+
+    def __str__(self) -> str:
+        return f"{self.marque} {self.modele} (Vmax: {self.vitesse_max} km/h)"
+
+class Voiture(Vehicule):
+    def __init__(self, marque: str, modele: str, vitesse_max: int, nb_portes: int):
+        super().__init__(marque, modele, vitesse_max)
+        self.portes = nb_portes
+
+    def __str__(self) -> str:
+        return super().__str__() + f", {self.portes} portes"`
+            }
+        ]
+    },
+    {
+        id: "seance-2",
+        tag: "Séance 2 • Algorithmique",
+        title: "Récursivité",
+        shortDesc: "Cas de base, appel récursif, terminaison (variant), pile d'appels et exponentiation rapide.",
+        summary: `
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Synthèse</span>
+                    <h3>Principes fondamentaux de la récursivité</h3>
+                </div>
+                <p>Une fonction est dite <strong>récursive</strong> lorsqu'elle s'appelle elle-même dans sa propre définition. C'est un outil fondamental pour parcourir les arbres et concevoir des algorithmes « diviser pour régner ».</p>
+                <div class="course-grid">
+                    <div class="concept-card">
+                        <h4>1. Les deux piliers</h4>
+                        <p><strong>Cas de base :</strong> problème élémentaire résolu directement sans appel récursif.</p>
+                        <p><strong>Cas général :</strong> décomposition vers un sous-problème strictement plus petit.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>2. Terminaison & Variant</h4>
+                        <p>On identifie un <strong>variant de récursion</strong> : une grandeur entière positive qui décroît strictement à chaque appel jusqu'au cas de base.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>3. Pile d'appels (Call Stack)</h4>
+                        <p>Chaque appel empile un contexte en mémoire (LIFO). En Python, la profondeur max par défaut est d'environ 1000 appels (<code>RecursionError</code>).</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>4. Chaînes & Listes</h4>
+                        <p>On traite le premier élément (<code>tab[0]</code>) puis on rappelle la fonction sur le reste (<code>tab[1:]</code> ou via un indice <code>i + 1</code>).</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        exercises: [
+            {
+                id: "exo-2-1",
+                title: "Exercice type 1 : Palindrome récursif",
+                statement: `Un palindrome est un mot qui se lit de la même façon de gauche à droite et de droite à gauche (ex. <code>"radar"</code>, <code>"kayak"</code>). Écrire une fonction récursive <code>est_palindrome(mot)</code> qui renvoie <code>True</code> si <code>mot</code> est un palindrome et <code>False</code> sinon.`,
+                starterCode: `def est_palindrome(mot: str) -> bool:
+    # Cas de base : un mot de longueur 0 ou 1 est toujours un palindrome
+    # Cas général : comparer mot[0] et mot[-1], puis appel récursif sur mot[1:-1]
+    pass
+
+# Tests
+assert est_palindrome("radar") == True
+assert est_palindrome("nsi") == False
+assert est_palindrome("ressasser") == True
+assert est_palindrome("") == True
+print("Tests palindrome validés !")`,
+                solutionCode: `def est_palindrome(mot: str) -> bool:
+    if len(mot) <= 1:
+        return True
+    if mot[0] != mot[-1]:
+        return False
+    return est_palindrome(mot[1:-1])`
+            },
+            {
+                id: "exo-2-2",
+                title: "Exercice type 2 : Exponentiation rapide (Diviser pour régner)",
+                statement: `Pour calculer $x^n$ ($n \\in \\mathbb{N}$), on utilise la relation récursive :
+                <br>• Si $n = 0$, $x^0 = 1$
+                <br>• Si $n$ est pair, $x^n = (x^{n//2})^2$
+                <br>• Si $n$ est impair, $x^n = x \\times (x^{(n-1)//2})^2$
+                <br>Implémenter la fonction récursive <code>puissance_rapide(x, n)</code> en veillant à ne faire qu'un seul appel récursif par étape (complexité en $O(\\log_2 n)$).`,
+                starterCode: `def puissance_rapide(x: float, n: int) -> float:
+    # À compléter
+    pass
+
+# Tests
+assert puissance_rapide(2, 0) == 1
+assert puissance_rapide(2, 10) == 1024
+assert puissance_rapide(3, 5) == 243
+print("Tests exponentiation rapide validés !")`,
+                solutionCode: `def puissance_rapide(x: float, n: int) -> float:
+    if n == 0:
+        return 1
+    demi = puissance_rapide(x, n // 2)
+    if n % 2 == 0:
+        return demi * demi
+    else:
+        return x * demi * demi`
+            }
+        ]
+    }
+];
+
+function renderSessionsGrid() {
+    const grid = document.getElementById("sessions-grid-view");
+    grid.innerHTML = "";
+
+    sessionsData.forEach((session) => {
+        const card = document.createElement("article");
+        card.className = "session-card";
+        card.innerHTML = `
+            <div>
+                <span class="card-tag">${session.tag}</span>
+                <h2>${session.title}</h2>
+                <p>${session.shortDesc}</p>
+            </div>
+            <div class="card-footer">
+                <span>${session.exercises.length} exercices types</span>
+                <span>Ouvrir →</span>
+            </div>
+        `;
+        card.onclick = () => openSession(session);
+        grid.appendChild(card);
+    });
+}
+
+function openSession(session) {
+    const gridView = document.getElementById("sessions-grid-view");
+    const detailView = document.getElementById("session-detail-view");
+    const container = document.getElementById("course-container");
+
+    gridView.classList.add("hidden");
+    detailView.classList.remove("hidden");
+
+    const disabledAttr = isPyodideReady ? "" : "disabled";
+    let exercisesHTML = "";
+
+    session.exercises.forEach((exo) => {
+        exercisesHTML += `
+            <div class="exercise-box">
+                <h4>${exo.title}</h4>
+                <p style="margin-top: 0.5rem;">${exo.statement}</p>
+
+                <div class="mini-ide">
+                    <div class="mini-ide-toolbar">
+                        <span class="mini-ide-label">Éditeur Python (Ctrl+Entrée pour exécuter)</span>
+                        <div class="mini-ide-buttons">
+                            <button class="btn-run" ${disabledAttr} onclick="runExerciseCode('${exo.id}')">▶ Exécuter</button>
+                            <button class="btn-reset" onclick="resetExerciseCode('${exo.id}')">↺ Réinitialiser</button>
+                            <button class="btn-corr" onclick="toggleCorrection('${exo.id}')">Correction</button>
+                        </div>
+                    </div>
+                    <textarea id="editor-${exo.id}"></textarea>
+                    <div id="output-${exo.id}" class="mini-console">Prêt à exécuter...</div>
+                </div>
+
+                <div id="corr-${exo.id}" class="correction-box">
+                    <strong>Proposition de correction :</strong>
+                    <pre class="code-block">${exo.solutionCode}</pre>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = `
+        <span class="badge">${session.tag}</span>
+        <h2 class="session-title">${session.title}</h2>
+        ${session.summary}
+        <h3 class="exercises-section-title">Exercices types à compléter</h3>
+        ${exercisesHTML}
+    `;
+
+    session.exercises.forEach((exo) => {
+        window.createExerciseEditor(exo.id, exo.starterCode);
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([container]).catch((err) => console.error(err));
+    }
+}
+
+function showGrid() {
+    document.getElementById("session-detail-view").classList.add("hidden");
+    document.getElementById("sessions-grid-view").classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+window.toggleCorrection = function(exoId) {
+    const box = document.getElementById(`corr-${exoId}`);
+    box.classList.toggle("visible");
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderSessionsGrid();
+    document.getElementById("back-btn").addEventListener("click", showGrid);
+});
