@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminale NSI : Récapitulatif des cours et exercices types</title>
+    <title>Terminale : récapitulatif des cours et exercices types</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Configuration MathJax pour le rendu des formules LaTeX -->
+    <!-- CodeMirror pour un vrai éditeur de code Python avec numéros de ligne -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <!-- Configuration MathJax pour les formules mathématiques -->
     <script>
         window.MathJax = {
             tex: {
@@ -21,9 +26,12 @@
 <body>
     <header class="glass-header">
         <div class="header-content">
-            <span class="badge">NSI • Terminale</span>
+            <div class="header-top">
+                <span class="badge">NSI • Terminale</span>
+                <span id="pyodide-status" class="status-loading">⏳ Initialisation de Python...</span>
+            </div>
             <h1>Terminale : récapitulatif des cours et exercices types</h1>
-            <p class="subtitle">Sélectionne une séance pour accéder à la fiche de synthèse, aux exercices types et au bac à sable Python</p>
+            <p class="subtitle">Fiches de synthèse, exercices types Bac avec éditeur Python intégré et corrections</p>
         </div>
     </header>
 
@@ -33,29 +41,12 @@
             <!-- Cartes générées dynamiquement par app.js -->
         </section>
 
-        <!-- Vue 2 : Détail d'une séance + IDE Python (masquée par défaut) -->
+        <!-- Vue 2 : Détail d'une séance avec ses exercices autonomes (masquée par défaut) -->
         <section id="session-detail-view" class="hidden">
             <button id="back-btn" class="btn-back">← Retour aux séances</button>
 
             <div id="course-container" class="glass-panel">
-                <!-- Contenu de la séance active -->
-            </div>
-
-            <!-- IDE Python interactif -->
-            <div class="ide-container glass-panel">
-                <div class="ide-header">
-                    <h3>Bac à sable Python (Pyodide)</h3>
-                    <div class="ide-actions">
-                        <span id="pyodide-status" class="status-loading">Chargement de Python...</span>
-                        <button id="run-btn" class="btn-primary" disabled>▶ Exécuter</button>
-                        <button id="clear-btn" class="btn-secondary">Effacer console</button>
-                    </div>
-                </div>
-                <textarea id="python-editor" spellcheck="false" placeholder="# Écris ou charge un exercice ici..."></textarea>
-                <div class="console-wrapper">
-                    <div class="console-label">Sortie console :</div>
-                    <pre id="python-output"></pre>
-                </div>
+                <!-- Contenu du cours et des exercices de la séance active -->
             </div>
         </section>
     </main>

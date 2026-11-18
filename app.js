@@ -34,7 +34,7 @@ const sessionsData = [
             {
                 id: "exo-0-1",
                 title: "Exercice type 1 : Parcours et dictionnaire d'occurrences",
-                statement: `Écrire une fonction <code>compter_occurrences(chaine)</code> qui prend en paramètre une chaîne de caractères non vide et renvoie un dictionnaire associant à chaque caractère son nombre d'apparitions. En déduire le caractère le plus fréquent.`,
+                statement: `Écrire une fonction <code>compter_occurrences(chaine)</code> qui prend en paramètre une chaîne de caractères non vide et renvoie un dictionnaire associant à chaque caractère son nombre d'apparitions.`,
                 starterCode: `def compter_occurrences(chaine: str) -> dict:
     # À compléter
     pass
@@ -49,15 +49,7 @@ print("Tests validés !")`,
             occurrences[caractere] += 1
         else:
             occurrences[caractere] = 1
-    return occurrences
-
-def plus_frequent(chaine: str) -> str:
-    occ = compter_occurrences(chaine)
-    max_car = chaine[0]
-    for car, nb in occ.items():
-        if nb > occ[max_car]:
-            max_car = car
-    return max_car`
+    return occurrences`
             },
             {
                 id: "exo-0-2",
@@ -327,20 +319,28 @@ function openSession(session) {
     gridView.classList.add("hidden");
     detailView.classList.remove("hidden");
 
+    const disabledAttr = isPyodideReady ? "" : "disabled";
     let exercisesHTML = "";
+
     session.exercises.forEach((exo) => {
         exercisesHTML += `
             <div class="exercise-box">
                 <h4>${exo.title}</h4>
                 <p style="margin-top: 0.5rem;">${exo.statement}</p>
-                <div class="exercise-actions">
-                    <button class="btn-outline" onclick="loadCodeInEditor(\`${encodeURIComponent(exo.starterCode)}\`)">
-                        Charger dans l'éditeur Python
-                    </button>
-                    <button class="btn-secondary" onclick="toggleCorrection('${exo.id}')">
-                        Afficher / Masquer la correction
-                    </button>
+
+                <div class="mini-ide">
+                    <div class="mini-ide-toolbar">
+                        <span class="mini-ide-label">Éditeur Python (Ctrl+Entrée pour exécuter)</span>
+                        <div class="mini-ide-buttons">
+                            <button class="btn-run" ${disabledAttr} onclick="runExerciseCode('${exo.id}')">▶ Exécuter</button>
+                            <button class="btn-reset" onclick="resetExerciseCode('${exo.id}')">↺ Réinitialiser</button>
+                            <button class="btn-corr" onclick="toggleCorrection('${exo.id}')">Correction</button>
+                        </div>
+                    </div>
+                    <textarea id="editor-${exo.id}"></textarea>
+                    <div id="output-${exo.id}" class="mini-console">Prêt à exécuter...</div>
                 </div>
+
                 <div id="corr-${exo.id}" class="correction-box">
                     <strong>Proposition de correction :</strong>
                     <pre class="code-block">${exo.solutionCode}</pre>
@@ -353,15 +353,14 @@ function openSession(session) {
         <span class="badge">${session.tag}</span>
         <h2 class="session-title">${session.title}</h2>
         ${session.summary}
-        <h3 style="margin-top: 1.5rem;">Exercices types</h3>
+        <h3 style="margin-top: 1.75rem;">Exercices types à compléter</h3>
         ${exercisesHTML}
     `;
 
-    // Pré-charge automatiquement le premier exercice de la séance dans l'éditeur
-    if (session.exercises.length > 0) {
-        document.getElementById("python-editor").value = session.exercises[0].starterCode;
-        document.getElementById("python-output").textContent = "";
-    }
+    // Initialise un éditeur CodeMirror dédié pour chaque exercice
+    session.exercises.forEach((exo) => {
+        window.createExerciseEditor(exo.id, exo.starterCode);
+    });
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -375,12 +374,6 @@ function showGrid() {
     document.getElementById("sessions-grid-view").classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
-window.loadCodeInEditor = function(encodedCode) {
-    const editor = document.getElementById("python-editor");
-    editor.value = decodeURIComponent(encodedCode);
-    editor.scrollIntoView({ behavior: "smooth", block: "center" });
-};
 
 window.toggleCorrection = function(exoId) {
     const box = document.getElementById(`corr-${exoId}`);
