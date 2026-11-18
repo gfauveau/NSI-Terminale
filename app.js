@@ -876,41 +876,246 @@ class Voiture(Vehicule):
     },
     {
         id: "seance-2",
-        tag: "Séance 2 • Algorithmique",
-        title: "Récursivité",
-        shortDesc: "Cas de base, appel récursif, terminaison (variant), pile d'appels et exponentiation rapide.",
+        tag: "Séance 2 • Cours Complet",
+        title: "La Récursivité",
+        shortDesc: "Cas de base, appel récursif, pile d'exécution (LIFO), dépassement de pile, récursivité double, mémoïsation et Diviser pour Régner.",
         summary: `
+            <!-- MODULE 1 -->
             <div class="lesson-module">
                 <div class="lesson-module-header">
-                    <span class="module-num">Synthèse</span>
-                    <h3>Principes fondamentaux de la récursivité</h3>
+                    <span class="module-num">Module 1</span>
+                    <h3>Définition, Règle d'or et Exemples fondateurs</h3>
                 </div>
-                <p>Une fonction est dite <strong>récursive</strong> lorsqu'elle s'appelle elle-même dans sa propre définition. C'est un outil fondamental pour parcourir les arbres et concevoir des algorithmes « diviser pour régner ».</p>
+                <p>Une fonction est dite <strong>récursive</strong> lorsqu'elle fait appel à elle-même dans sa propre définition pour résoudre un problème en le décomposant en sous-problèmes de taille strictement réduite.</p>
+                <div class="callout-info">
+                    <strong>Règle d'or de la récursivité :</strong> Tout algorithme récursif valide doit obligatoirement comporter :
+                    <br>1. <strong>Un cas de base (condition d'arrêt) :</strong> valeur de l'argument pour laquelle le résultat est renvoyé immédiatement sans appel récursif (comme le rez-de-chaussée d'un escalier).
+                    <br>2. <strong>Un appel récursif avec réduction stricte :</strong> le paramètre évolue (ex. <code>n - 1</code>, <code>n // 2</code>, <code>lst[1:]</code>) afin de converger à coup sûr vers le cas de base.
+                </div>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Exemple 1 : Somme des $n$ premiers entiers</h4>
+                        <pre class="code-block">def mystere(n: int) -> int:
+    if n == 0:
+        return 0  # Cas de base
+    else:
+        return n + mystere(n - 1)
+
+# mystere(4) -> 4 + (3 + (2 + (1 + 0))) = 10</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Exemple 2 : Factorielle ($n!$)</h4>
+                        <pre class="code-block">def factorielle(n: int) -> int:
+    if n == 0:
+        return 1  # Cas de base : 0! = 1
+    else:
+        return n * factorielle(n - 1)
+
+# factorielle(5) -> 5 * 4 * 3 * 2 * 1 = 120</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Mécanisme interne : la Pile d'Exécution (Call Stack)</h3>
+                </div>
+                <p>Lors de l'exécution d'une fonction récursive, l'interpréteur empile chaque appel en mémoire vive dans une <strong>pile d'exécution</strong> fonctionnant selon le principe <strong>LIFO</strong> (<em>Last In, First Out</em> — Dernier Entré, Premier Sorti).</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Phase d'exécution</th>
+                            <th>Comportement de la pile pour <code>mystere(3)</code></th>
+                            <th>État des calculs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Descente (Empilement)</strong></td>
+                            <td><code>mystere(3)</code> $\\rightarrow$ <code>mystere(2)</code> $\\rightarrow$ <code>mystere(1)</code> $\\rightarrow$ <code>mystere(0)</code></td>
+                            <td>Chaque contexte d'appel est mis en attente au sommet de la pile.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Cas de base atteint</strong></td>
+                            <td><code>mystere(0)</code> renvoie <code>0</code></td>
+                            <td>La descente s'arrête au sommet de la pile.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Remontée (Dépilement)</strong></td>
+                            <td><code>1 + 0 = 1</code> $\\rightarrow$ <code>2 + 1 = 3</code> $\\rightarrow$ <code>3 + 3 = 6</code></td>
+                            <td>Les opérations en attente sont résolues du haut vers le bas jusqu'au résultat final.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-warning">
+                    <strong>Piège du dépassement de pile (Stack Overflow) :</strong> La taille de la pile d'appels est limitée en mémoire. En Python, la profondeur maximale par défaut est d'environ <strong>1 000 appels imbriqués</strong> : au-delà (ou en cas d'oubli du cas de base), Python lève l'exception <code>RecursionError: maximum recursion depth exceeded</code>.
+                </div>
+            </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Méthodologie en 4 étapes & Structures de données</h3>
+                </div>
                 <div class="course-grid">
                     <div class="concept-card">
-                        <h4>1. Les deux piliers</h4>
-                        <p><strong>Cas de base :</strong> problème élémentaire résolu directement sans appel récursif.</p>
-                        <p><strong>Cas général :</strong> décomposition vers un sous-problème strictement plus petit.</p>
+                        <h4>Méthode de conception</h4>
+                        <p><strong>1.</strong> Identifier le <strong>type de retour</strong> (entier, booléen, liste, chaîne...).</p>
+                        <p><strong>2.</strong> Écrire le(s) <strong>cas de base</strong> et la valeur retournée.</p>
+                        <p><strong>3.</strong> Définir la <strong>réduction</strong> du problème (variant décroissant).</p>
+                        <p><strong>4.</strong> Combiner l'appel récursif en respectant le type de retour.</p>
                     </div>
                     <div class="concept-card">
-                        <h4>2. Terminaison & Variant</h4>
-                        <p>On identifie un <strong>variant de récursion</strong> : une grandeur entière positive qui décroît strictement à chaque appel jusqu'au cas de base.</p>
+                        <h4>Récursivité sur les listes (Tête / Queue)</h4>
+                        <pre class="code-block">def somme_liste(lst):
+    if len(lst) == 0:
+        return 0
+    return lst[0] + somme_liste(lst[1:])</pre>
+                        <p><em>Attention :</em> le slicing <code>lst[1:]</code> copie la liste à chaque étape ($O(n)$).</p>
                     </div>
                     <div class="concept-card">
-                        <h4>3. Pile d'appels (Call Stack)</h4>
-                        <p>Chaque appel empile un contexte en mémoire (LIFO). En Python, la profondeur max par défaut est d'environ 1000 appels (<code>RecursionError</code>).</p>
+                        <h4>Dichotomie récursive sans copie</h4>
+                        <pre class="code-block">def dicho_rec(tab, x, i, j):
+    if i > j:
+        return False
+    m = (i + j) // 2
+    if tab[m] == x: return True
+    elif tab[m] < x:
+        return dicho_rec(tab, x, m + 1, j)
+    else:
+        return dicho_rec(tab, x, i, m - 1)</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 4 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 4</span>
+                    <h3>Récursivité double, Récursivité explosive & Mémoïsation</h3>
+                </div>
+                <p>Une fonction présente une <strong>récursivité double</strong> lorsqu'elle effectue deux appels récursifs dans son corps, comme pour la suite de Fibonacci ($F_0 = 0$, $F_1 = 1$, $F_n = F_{n-1} + F_{n-2}$). Sans précaution, l'arbre d'appels croît exponentiellement en $\\Theta(2^n)$ car les mêmes sous-problèmes sont recalculés des milliers de fois.</p>
+                <div class="two-col-grid">
+                    <div class="concept-card">
+                        <h4>Version naïve explosive — $\\Theta(2^n)$</h4>
+                        <pre class="code-block">def fibo_naif(n):
+    if n <= 1:
+        return n
+    return fibo_naif(n - 1) + fibo_naif(n - 2)
+
+# fibo_naif(40) prend ~30 secondes
+# car fibo(2) est recalculé des millions de fois !</pre>
                     </div>
                     <div class="concept-card">
-                        <h4>4. Chaînes & Listes</h4>
-                        <p>On traite le premier élément (<code>tab[0]</code>) puis on rappelle la fonction sur le reste (<code>tab[1:]</code> ou via un indice <code>i + 1</code>).</p>
+                        <h4>Avec Mémoïsation (dictionnaire) — $\\Theta(n)$</h4>
+                        <pre class="code-block">def fibo_memo(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n in memo:
+        return memo[n]
+    if n <= 1:
+        return n
+    memo[n] = fibo_memo(n-1, memo) + fibo_memo(n-2, memo)
+    return memo[n]</pre>
                     </div>
+                </div>
+            </div>
+
+            <!-- MODULE 5 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 5</span>
+                    <h3>Paradigme « Diviser pour Régner » & Complexités</h3>
+                </div>
+                <p>Le paradigme <strong>Diviser pour Régner</strong> (<em>Divide and Conquer</em>) consiste à découper un problème de taille $n$ en sous-problèmes indépendants de taille divisée par 2, à les résoudre récursivement, puis à combiner leurs résultats (ex. <strong>Exponentiation rapide</strong>, <strong>Tri Fusion</strong>).</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Relation de récurrence</th>
+                            <th>Algorithme emblématique</th>
+                            <th>Complexité temporelle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$T(n) = T(n - 1) + \\Theta(1)$</td>
+                            <td>Factorielle, Somme récursive, Puissance naïve</td>
+                            <td>$\\Theta(n)$ (Linéaire)</td>
+                        </tr>
+                        <tr>
+                            <td>$T(n) = T(n / 2) + \\Theta(1)$</td>
+                            <td>Recherche dichotomique (avec indices), Exponentiation rapide</td>
+                            <td>$\\Theta(\\log_2 n)$ (Logarithmique)</td>
+                        </tr>
+                        <tr>
+                            <td>$T(n) = 2 T(n / 2) + \\Theta(n)$</td>
+                            <td>Tri Fusion (<em>Merge Sort</em>)</td>
+                            <td>$\\Theta(n \\log_2 n)$ (Quasi-linéaire)</td>
+                        </tr>
+                        <tr>
+                            <td>$T(n) = 2 T(n - 1) + \\Theta(1)$</td>
+                            <td>Tours de Hanoï ($2^n - 1$ déplacements), Fibonacci naïf</td>
+                            <td>$\\Theta(2^n)$ (Exponentielle)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-success">
+                    <strong>Checklist Bac NSI :</strong>
+                    <ul class="checklist-list">
+                        <li>Identifier systématiquement le <strong>cas de base</strong> et vérifier la <strong>terminaison</strong> (variant décroissant).</li>
+                        <li>Savoir dérouler à la main la <strong>pile d'appels</strong> d'une fonction récursive simple ou double.</li>
+                        <li>Éviter le slicing coûteux (<code>lst[1:]</code>) en passant des indices de bornes <code>(i, j)</code>.</li>
+                        <li>Comprendre pourquoi la <strong>mémoïsation</strong> transforme une complexité exponentielle en linéaire.</li>
+                    </ul>
                 </div>
             </div>
         `,
         exercises: [
             {
                 id: "exo-2-1",
-                title: "Exercice type 1 : Palindrome récursif",
+                title: "Exercice 1 (Récursivité sur les entiers) : Somme des chiffres d'un entier",
+                statement: `Écrire une fonction récursive <code>somme_chiffres(n)</code> qui prend en paramètre un entier naturel $n \\ge 0$ et renvoie la somme de ses chiffres en base 10 (ex. <code>somme_chiffres(2026) == 10</code>).
+                <br><em>Indice :</em> le dernier chiffre vaut <code>n % 10</code> et le nombre privé de son dernier chiffre vaut <code>n // 10</code>.`,
+                starterCode: `def somme_chiffres(n: int) -> int:
+    # Cas de base : si n < 10, renvoyer n
+    # Cas général : n % 10 + appel récursif sur n // 10
+    pass
+
+# Tests
+assert somme_chiffres(0) == 0
+assert somme_chiffres(7) == 7
+assert somme_chiffres(2026) == 10
+assert somme_chiffres(9876) == 30
+print("Exercice 1 validé !")`,
+                solutionCode: `def somme_chiffres(n: int) -> int:
+    if n < 10:
+        return n
+    return (n % 10) + somme_chiffres(n // 10)`
+            },
+            {
+                id: "exo-2-2",
+                title: "Exercice 2 (Algorithme d'Euclide) : PGCD récursif",
+                statement: `L'algorithme d'Euclide calcule le plus grand commun diviseur de deux entiers naturels $a$ et $b$ grâce à la relation : $\\text{pgcd}(a, 0) = a$ et $\\text{pgcd}(a, b) = \\text{pgcd}(b, a \\bmod b)$ pour $b > 0$. Implémenter la fonction récursive <code>pgcd(a, b)</code>.`,
+                starterCode: `def pgcd(a: int, b: int) -> int:
+    # À compléter
+    pass
+
+# Tests
+assert pgcd(48, 18) == 6
+assert pgcd(1071, 462) == 21
+assert pgcd(17, 5) == 1
+print("PGCD validé !")`,
+                solutionCode: `def pgcd(a: int, b: int) -> int:
+    if b == 0:
+        return a
+    return pgcd(b, a % b)`
+            },
+            {
+                id: "exo-2-3",
+                title: "Exercice 3 (Chaînes de caractères) : Palindrome récursif",
                 statement: `Un palindrome est un mot qui se lit de la même façon de gauche à droite et de droite à gauche (ex. <code>"radar"</code>, <code>"kayak"</code>). Écrire une fonction récursive <code>est_palindrome(mot)</code> qui renvoie <code>True</code> si <code>mot</code> est un palindrome et <code>False</code> sinon.`,
                 starterCode: `def est_palindrome(mot: str) -> bool:
     # Cas de base : un mot de longueur 0 ou 1 est toujours un palindrome
@@ -931,13 +1136,39 @@ print("Tests palindrome validés !")`,
     return est_palindrome(mot[1:-1])`
             },
             {
-                id: "exo-2-2",
-                title: "Exercice type 2 : Exponentiation rapide (Diviser pour régner)",
+                id: "exo-2-4",
+                title: "Exercice 4 (Sans copie de liste) : Recherche dichotomique récursive",
+                statement: `Compléter la fonction récursive <code>dicho_rec(tab, cible, i, j)</code> qui recherche <code>cible</code> dans le sous-tableau trié <code>tab[i..j]</code> et renvoie son indice, ou <code>-1</code> si l'élément est absent.`,
+                starterCode: `def dicho_rec(tab: list, cible: int, i: int, j: int) -> int:
+    # Cas de base : intervalle vide (i > j) -> renvoyer -1
+    # Calculer le milieu m = (i + j) // 2 et comparer tab[m] à cible
+    pass
+
+# Tests
+t = [3, 7, 12, 19, 25, 31, 42, 58]
+assert dicho_rec(t, 25, 0, len(t) - 1) == 4
+assert dicho_rec(t, 3, 0, len(t) - 1) == 0
+assert dicho_rec(t, 20, 0, len(t) - 1) == -1
+print("Dichotomie récursive validée !")`,
+                solutionCode: `def dicho_rec(tab: list, cible: int, i: int, j: int) -> int:
+    if i > j:
+        return -1
+    m = (i + j) // 2
+    if tab[m] == cible:
+        return m
+    elif tab[m] < cible:
+        return dicho_rec(tab, cible, m + 1, j)
+    else:
+        return dicho_rec(tab, cible, i, m - 1)`
+            },
+            {
+                id: "exo-2-5",
+                title: "Exercice 5 (Diviser pour régner) : Exponentiation rapide en $O(\\log_2 n)$",
                 statement: `Pour calculer $x^n$ ($n \\in \\mathbb{N}$), on utilise la relation récursive :
                 <br>• Si $n = 0$, $x^0 = 1$
                 <br>• Si $n$ est pair, $x^n = (x^{n//2})^2$
                 <br>• Si $n$ est impair, $x^n = x \\times (x^{(n-1)//2})^2$
-                <br>Implémenter la fonction récursive <code>puissance_rapide(x, n)</code> en veillant à ne faire qu'un seul appel récursif par étape (complexité en $O(\\log_2 n)$).`,
+                <br>Implémenter <code>puissance_rapide(x, n)</code> en veillant à ne faire qu'un seul appel récursif par étape.`,
                 starterCode: `def puissance_rapide(x: float, n: int) -> float:
     # À compléter
     pass
@@ -946,7 +1177,7 @@ print("Tests palindrome validés !")`,
 assert puissance_rapide(2, 0) == 1
 assert puissance_rapide(2, 10) == 1024
 assert puissance_rapide(3, 5) == 243
-print("Tests exponentiation rapide validés !")`,
+print("Exponentiation rapide validée !")`,
                 solutionCode: `def puissance_rapide(x: float, n: int) -> float:
     if n == 0:
         return 1
@@ -955,6 +1186,34 @@ print("Tests exponentiation rapide validés !")`,
         return demi * demi
     else:
         return x * demi * demi`
+            },
+            {
+                id: "exo-2-6",
+                title: "Exercice 6 (Défi classique) : Les Tours de Hanoï",
+                statement: `Compléter la fonction récursive <code>hanoi(n, depart, intermediaire, arrivee)</code> qui ajoute dans la liste <code>coups</code> chaque déplacement sous la forme d'un tuple <code>(depart, arrivee)</code> pour déplacer $n$ disques de la tour <code>depart</code> vers la tour <code>arrivee</code>. Vérifier que pour $n = 3$, le nombre de coups est bien $2^3 - 1 = 7$.`,
+                starterCode: `def hanoi(n: int, depart: str, intermediaire: str, arrivee: str, coups: list) -> None:
+    if n == 1:
+        coups.append((depart, arrivee))
+    else:
+        # 1. Déplacer n-1 disques de depart vers intermediaire
+        # 2. Déplacer le disque restant de depart vers arrivee
+        # 3. Déplacer n-1 disques de intermediaire vers arrivee
+        pass
+
+# Tests
+mouvements = []
+hanoi(3, "A", "B", "C", mouvements)
+assert len(mouvements) == 7
+assert mouvements[0] == ("A", "C") and mouvements[-1] == ("A", "C")
+print("Séquence pour 3 disques :", mouvements)
+print("Tours de Hanoï validées !")`,
+                solutionCode: `def hanoi(n: int, depart: str, intermediaire: str, arrivee: str, coups: list) -> None:
+    if n == 1:
+        coups.append((depart, arrivee))
+    else:
+        hanoi(n - 1, depart, arrivee, intermediaire, coups)
+        coups.append((depart, arrivee))
+        hanoi(n - 1, intermediaire, depart, arrivee, coups)`
             }
         ]
     }
