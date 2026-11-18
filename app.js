@@ -82,49 +82,162 @@ print("Dichotomie validée !")`,
     },
     {
         id: "seance-1",
-        tag: "Séance 1 • Paradigmes",
+        tag: "Séance 1 • Cours Complet",
         title: "Programmation Orientée Objet (POO)",
-        shortDesc: "Classes, instances, constructeur __init__, attributs, méthodes, encapsulation et composition d'objets.",
+        shortDesc: "Paradigmes, classes, constructeur __init__, self, composition, encapsulation, méthodes spéciales (__str__, __eq__, __add__) et héritage.",
         summary: `
-            <p>La Programmation Orientée Objet permet de regrouper au sein d'une même structure (une <strong>classe</strong>) des données (les <strong>attributs</strong>) et les traitements associés (les <strong>méthodes</strong>).</p>
+            <h3 class="module-title">Module 1 : Paradigmes de programmation et modularité</h3>
+            <p>Un <strong>paradigme de programmation</strong> (du grec <em>paradeigma</em>, « modèle ») désigne la démarche intellectuelle adoptée pour modéliser et résoudre un problème informatique. Comme trois menuisiers assemblant un meuble (collé-pointé, visseuse ou tenons-mortaises), chaque paradigme possède ses outils et ses compromis. Python est multi-paradigme.</p>
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>Paradigme</th>
+                        <th>Principe fondamental</th>
+                        <th>Caractéristiques clés</th>
+                        <th>Langages</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Impératif</strong></td>
+                        <td>Séquence d'instructions pas à pas</td>
+                        <td>Modèle de von Neumann (variables, affectations, boucles)</td>
+                        <td>C, Fortran, Python</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fonctionnel</strong></td>
+                        <td>Description du résultat (« quoi ») plutôt que du « comment »</td>
+                        <td>Immutabilité, transparence référentielle, fonctions sans effet de bord</td>
+                        <td>Haskell, OCaml, Lisp</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orienté Objet (POO)</strong></td>
+                        <td>Regroupement des données et traitements dans des entités</td>
+                        <td>Encapsulation, objets autonomes, modularité, réutilisation</td>
+                        <td>Python, Java, C++, Smalltalk</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="module-title">Module 2 : Vocabulaire fondamental & Objets déjà autour de nous</h3>
+            <p>En Python, tout est déjà objet : une liste <code>m = [4, 5, 2]</code> est une instance de la classe prédéfinie <code>list</code>. On applique une méthode avec la <strong>notation pointée</strong> (<code>m.reverse()</code>), on inspecte l'interface d'un objet avec <code>dir(m)</code> et sa documentation avec <code>help(m.append)</code>.</p>
             <div class="course-grid">
                 <div class="concept-card">
-                    <h4>1. Classe et Instance</h4>
-                    <p>Une <strong>classe</strong> est un modèle abstrait défini par le mot-clé <code>class NomClasse:</code>.</p>
-                    <p>Un <strong>objet (instance)</strong> est créé en appelant la classe : <code>obj = NomClasse(arg1, arg2)</code>.</p>
+                    <h4>Classe (le moule)</h4>
+                    <p>Plan ou gabarit abstrait définissant la structure (attributs) et les comportements (méthodes) d'une catégorie d'objets. Par convention, son nom commence par une <strong>Majuscule</strong> (CamelCase).</p>
                 </div>
                 <div class="concept-card">
-                    <h4>2. Constructeur & <code>self</code></h4>
-                    <p>La méthode spéciale <code>__init__(self, ...)</code> initialise les attributs de l'instance lors de sa création.</p>
-                    <p>Le paramètre <code>self</code> désigne l'instance courante sur laquelle la méthode est appelée.</p>
+                    <h4>Objet / Instance (le réel)</h4>
+                    <p>Réalisation concrète issue d'une classe, occupant une adresse propre en mémoire (ex. <code>larry</code> est une instance de la classe <code>Chat</code>).</p>
                 </div>
                 <div class="concept-card">
-                    <h4>3. Encapsulation & Interface</h4>
-                    <p>On manipule l'état interne d'un objet via ses <strong>méthodes</strong> (accesseurs / mutateurs) plutôt que de modifier directement ses attributs.</p>
-                    <p>Convention : un attribut préfixé par <code>_</code> signale un usage interne.</p>
+                    <h4>Attribut (l'état)</h4>
+                    <p>Variable interne rattachée à un objet représentant ses caractéristiques (ex. <code>self.x</code>, <code>self.couleur</code>, <code>self.solde</code>).</p>
                 </div>
                 <div class="concept-card">
-                    <h4>4. Méthodes spéciales</h4>
-                    <p><code>__str__(self)</code> : renvoie une représentation lisible de l'objet (utilisée par <code>print(obj)</code>).</p>
-                    <p><code>__repr__(self)</code> : représentation non ambiguë pour le débogage.</p>
+                    <h4>Méthode (le comportement)</h4>
+                    <p>Fonction définie à l'intérieur d'une classe qui agit sur les attributs de l'instance ou rend un service (ex. <code>deplacer()</code>, <code>deposer()</code>).</p>
                 </div>
+            </div>
+
+            <h3 class="module-title">Module 3 : Implémentation en Python, Constructeur & <code>self</code></h3>
+            <p>La construction propre d'un objet repose sur la méthode spéciale <code>__init__(self, ...)</code>, appelée automatiquement lors de l'instanciation. Le paramètre <code>self</code> désigne toujours l'instance courante en cours de création ou de manipulation.</p>
+            <pre class="code-block">class Point:
+    """Classe représentant un point dans un repère cartésien 2D."""
+    compteur_objets = 0  # Attribut de classe (partagé par toutes les instances)
+
+    def __init__(self, x, y):
+        self.x = x       # Attribut d'instance
+        self.y = y
+        Point.compteur_objets += 1
+
+    def deplacer(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
+    def distance_origine(self):
+        return (self.x**2 + self.y**2)**0.5</pre>
+
+            <h3 class="module-title">Module 4 : Composition & Relations entre Objets</h3>
+            <p>Un attribut d'un objet peut lui-même être une <strong>instance d'une autre classe</strong>. Cette composition permet d'imbriquer des objets (ex. un objet <code>Personne</code> possède un attribut <code>self.chien</code> qui est une instance de <code>Chien</code>, accessible via <code>alain.chien.race</code>) et prépare directement aux listes chaînées et aux arbres.</p>
+
+            <h3 class="module-title">Module 5 : Encapsulation, Accesseurs (Getters) & Mutateurs (Setters)</h3>
+            <p>L'<strong>encapsulation</strong> consiste à protéger l'état interne d'un objet en passant par des méthodes dédiées (<em>getters</em> pour lire, <em>setters</em> pour modifier avec contrôle) plutôt qu'en modifiant directement les attributs depuis l'extérieur.</p>
+            <div class="callout-warning">
+                <strong>Point de vigilance Éduscol :</strong> Python ne possède pas d'attributs privés stricts comme Java ou C++. Préfixer un attribut par un underscore (<code>self._solde</code>) est une convention signalant un usage interne ; le double underscore (<code>self.__solde</code>) déclenche un renommage interne (<em>Name Mangling</em> en <code>_Classe__solde</code>).
+            </div>
+
+            <h3 class="module-title">Module 6 : Méthodes Spéciales (Dunder) & Surcharge d'Opérateurs</h3>
+            <p>Par défaut, <code>print(obj)</code> affiche une adresse mémoire brute et <code>obj1 == obj2</code> compare les adresses mémoire (identité) plutôt que les valeurs. Les méthodes spéciales (encadrées de doubles underscores) permettent d'intégrer nos classes aux opérateurs natifs de Python :</p>
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>Méthode spéciale</th>
+                        <th>Déclencheur Python</th>
+                        <th>Rôle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>__init__(self, ...)</code></td>
+                        <td><code>obj = MaClasse(args)</code></td>
+                        <td>Constructeur : initialise les attributs de l'instance</td>
+                    </tr>
+                    <tr>
+                        <td><code>__str__(self)</code></td>
+                        <td><code>print(obj)</code> / <code>str(obj)</code></td>
+                        <td>Représentation textuelle lisible destinée à l'utilisateur</td>
+                    </tr>
+                    <tr>
+                        <td><code>__repr__(self)</code></td>
+                        <td>Console / <code>repr(obj)</code></td>
+                        <td>Représentation officielle non ambiguë (débogage)</td>
+                    </tr>
+                    <tr>
+                        <td><code>__eq__(self, autre)</code></td>
+                        <td><code>obj1 == obj2</code></td>
+                        <td>Redéfinit le test d'égalité logique entre deux instances</td>
+                    </tr>
+                    <tr>
+                        <td><code>__add__(self, autre)</code></td>
+                        <td><code>obj1 + obj2</code></td>
+                        <td>Surcharge de l'opérateur d'addition <code>+</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="module-title">Module 7 : Héritage, Polymorphisme & Programmation Défensive</h3>
+            <p>L'<strong>héritage</strong> permet de créer une <strong>classe fille</strong> (ex. <code>class Voiture(Vehicule):</code>) qui hérite des attributs et méthodes d'une <strong>classe mère</strong>. On appelle le constructeur parent via <code>super().__init__(...)</code>. Le <strong>polymorphisme</strong> permet aux classes filles de redéfinir une même méthode (ex. <code>parler()</code>) avec un comportement propre.</p>
+            <div class="callout-box">
+                <strong>Checklist Bac NSI :</strong>
+                <ul class="checklist-list">
+                    <li>Définir une classe avec <code>class Nom:</code> et son constructeur <code>__init__(self, ...)</code>.</li>
+                    <li>Comprendre le rôle de <code>self</code> et distinguer classe (modèle) et instance (objet).</li>
+                    <li>Utiliser l'encapsulation (getters/setters) et la composition d'objets.</li>
+                    <li>Redéfinir <code>__str__</code>, <code>__repr__</code>, <code>__eq__</code> et <code>__add__</code>.</li>
+                    <li>Étendre une classe par héritage avec <code>super()</code> et vérifier les types avec <code>isinstance()</code>.</li>
+                </ul>
             </div>
         `,
         exercises: [
             {
                 id: "exo-1-1",
-                title: "Exercice type 1 : Gestion d'un compte bancaire",
-                statement: `Compléter la classe <code>CompteBancaire</code> possédant deux attributs : <code>titulaire</code> (str) et <code>solde</code> (float, initialisé à 0 par défaut). Implémenter les méthodes <code>deposer(montant)</code>, <code>retirer(montant)</code> (qui renvoie <code>True</code> si le solde est suffisant, <code>False</code> sinon sans modifier le solde) et <code>__str__()</code>.`,
-                starterCode: `class CompteBancaire:
-    def __init__(self, titulaire: str, solde: float = 0.0):
+                title: "Exercice 1 (Bases & Méthodes) : La classe Point 2D",
+                statement: `Créer une classe <code>Point</code> permettant de modéliser un point du plan par ses coordonnées <code>x</code> et <code>y</code>. Implémenter :
+                <br>• le constructeur <code>__init__(self, x, y)</code> ;
+                <br>• <code>deplacer(self, dx, dy)</code> qui effectue une translation du point ;
+                <br>• <code>distance_origine(self)</code> qui renvoie $\\sqrt{x^2 + y^2}$ ;
+                <br>• <code>__str__(self)</code> renvoyant <code>"(x, y)"</code>.`,
+                starterCode: `class Point:
+    def __init__(self, x: float, y: float):
         # À compléter
         pass
 
-    def deposer(self, montant: float) -> None:
+    def deplacer(self, dx: float, dy: float) -> None:
         # À compléter
         pass
 
-    def retirer(self, montant: float) -> bool:
+    def distance_origine(self) -> float:
         # À compléter
         pass
 
@@ -133,77 +246,244 @@ print("Dichotomie validée !")`,
         pass
 
 # Tests
-c1 = CompteBancaire("Alice", 100.0)
-c1.deposer(50.0)
-assert c1.solde == 150.0
-assert c1.retirer(200.0) == False
-assert c1.retirer(80.0) == True
-assert c1.solde == 70.0
-print(c1)
-print("Tests CompteBancaire validés !")`,
-                solutionCode: `class CompteBancaire:
-    def __init__(self, titulaire: str, solde: float = 0.0):
-        self.titulaire = titulaire
-        self.solde = solde
+p1 = Point(4, 3)
+assert p1.x == 4 and p1.y == 3
+assert p1.distance_origine() == 5.0
+p1.deplacer(-1, 2)
+assert str(p1) == "(3, 5)"
+print("Point après déplacement :", p1)
+print("Exercice 1 validé !")`,
+                solutionCode: `class Point:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
 
-    def deposer(self, montant: float) -> None:
-        if montant > 0:
-            self.solde += montant
+    def deplacer(self, dx: float, dy: float) -> None:
+        self.x += dx
+        self.y += dy
 
-    def retirer(self, montant: float) -> bool:
-        if 0 < montant <= self.solde:
-            self.solde -= montant
-            return True
-        return False
+    def distance_origine(self) -> float:
+        return (self.x**2 + self.y**2)**0.5
 
     def __str__(self) -> str:
-        return f"Compte de {self.titulaire} : {self.solde} €"`
+        return f"({self.x}, {self.y})"`
             },
             {
                 id: "exo-1-2",
-                title: "Exercice type 2 : Composition d'objets (Fraction & comparaison)",
-                statement: `On modélise une fraction par une classe <code>Fraction</code> d'attributs <code>num</code> (numérateur entier) et <code>denom</code> (dénominateur entier strictement positif). Écrire la méthode <code>est_egale(self, autre)</code> qui renvoie <code>True</code> si les deux fractions sont mathématiquement égales (produit en croix), et <code>multiplier(self, autre)</code> qui renvoie une <strong>nouvelle instance</strong> de <code>Fraction</code>.`,
-                starterCode: `class Fraction:
-    def __init__(self, num: int, denom: int):
-        assert denom > 0, "Le dénominateur doit être strictement positif"
-        self.num = num
-        self.denom = denom
+                title: "Exercice 2 (Encapsulation & Getters/Setters) : Classe Joueur & CompteBancaire",
+                statement: `En suivant le principe d'encapsulation, compléter la classe <code>Joueur</code> possédant les attributs <code>nom</code>, <code>_club</code> et <code>_age</code>. Implémenter le getter <code>get_club()</code> et le setter <code>mutation(nouveau_club)</code> qui vérifie avec <code>assert</code> que <code>nouveau_club</code> est une chaîne non vide.`,
+                starterCode: `class Joueur:
+    def __init__(self, nom: str, club: str, age: int):
+        self.nom = nom
+        self._club = club
+        self._age = age
 
-    def est_egale(self, autre: 'Fraction') -> bool:
+    def get_club(self) -> str:
         # À compléter
         pass
 
-    def multiplier(self, autre: 'Fraction') -> 'Fraction':
-        # À compléter
+    def mutation(self, nouveau_club: str) -> None:
+        # Vérifier que nouveau_club est non vide puis mettre à jour _club
         pass
-
-    def __str__(self) -> str:
-        return f"{self.num}/{self.denom}"
 
 # Tests
-f1 = Fraction(1, 2)
-f2 = Fraction(2, 4)
-f3 = Fraction(3, 5)
-assert f1.est_egale(f2) == True
-assert f1.est_egale(f3) == False
-f4 = f1.multiplier(f3)
-assert f4.num == 3 and f4.denom == 10
-print("Produit :", f4)
-print("Tests Fraction validés !")`,
+j = Joueur("Nans Ducuing", "UBB", 34)
+assert j.get_club() == "UBB"
+j.mutation("Perpignan")
+assert j.get_club() == "Perpignan"
+print(f"{j.nom} joue désormais à {j.get_club()}.")
+print("Exercice 2 validé !")`,
+                solutionCode: `class Joueur:
+    def __init__(self, nom: str, club: str, age: int):
+        self.nom = nom
+        self._club = club
+        self._age = age
+
+    def get_club(self) -> str:
+        return self._club
+
+    def mutation(self, nouveau_club: str) -> None:
+        assert isinstance(nouveau_club, str) and len(nouveau_club) > 0, "Club invalide"
+        self._club = nouveau_club`
+            },
+            {
+                id: "exo-1-3",
+                title: "Exercice 3 (Méthodes spéciales) : Fraction avec __repr__ et __eq__",
+                statement: `On reprend la classe <code>Fraction(num, den)</code>.
+                <br>1. Redéfinir <code>__repr__(self)</code> pour afficher <code>"num/den"</code>, ou uniquement <code>"num"</code> si <code>den == 1</code>.
+                <br>2. Redéfinir <code>__eq__(self, autre)</code> pour que <code>f1 == f2</code> renvoie <code>True</code> si les fractions sont mathématiquement égales (produit en croix).`,
+                starterCode: `class Fraction:
+    def __init__(self, num: int, den: int):
+        assert den > 0, "Dénominateur strictement positif requis"
+        self.numerateur = num
+        self.denominateur = den
+
+    def __repr__(self) -> str:
+        # À compléter
+        pass
+
+    def __eq__(self, autre: object) -> bool:
+        # À compléter
+        pass
+
+# Tests
+f1 = Fraction(3, 4)
+f2 = Fraction(6, 8)
+f3 = Fraction(5, 1)
+assert repr(f1) == "3/4"
+assert repr(f3) == "5"
+assert f1 == f2
+assert not (f1 == f3)
+print("f1 =", f1, "| f3 =", f3, "| f1 == f2 :", f1 == f2)
+print("Exercice 3 validé !")`,
                 solutionCode: `class Fraction:
-    def __init__(self, num: int, denom: int):
-        assert denom > 0, "Le dénominateur doit être strictement positif"
-        self.num = num
-        self.denom = denom
+    def __init__(self, num: int, den: int):
+        assert den > 0, "Dénominateur strictement positif requis"
+        self.numerateur = num
+        self.denominateur = den
 
-    def est_egale(self, autre: 'Fraction') -> bool:
-        return self.num * autre.denom == self.denom * autre.num
+    def __repr__(self) -> str:
+        if self.denominateur == 1:
+            return str(self.numerateur)
+        return f"{self.numerateur}/{self.denominateur}"
 
-    def multiplier(self, autre: 'Fraction') -> 'Fraction':
-        return Fraction(self.num * autre.num, self.denom * autre.denom)
+    def __eq__(self, autre: object) -> bool:
+        if not isinstance(autre, Fraction):
+            return False
+        return self.numerateur * autre.denominateur == self.denominateur * autre.numerateur`
+            },
+            {
+                id: "exo-1-4",
+                title: "Exercice 4 (Surcharge d'opérateurs) : Vecteur 2D et __add__",
+                statement: `Compléter la classe <code>Vecteur(x, y)</code> en surchargeant l'opérateur <code>+</code> via <code>__add__(self, autre)</code> (en vérifiant avec <code>assert isinstance(autre, Vecteur)</code> que l'opérande est bien un vecteur) et en ajoutant une méthode <code>norme(self)</code>.`,
+                starterCode: `class Vecteur:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
 
     def __str__(self) -> str:
-        return f"{self.num}/{self.denom}"`
+        return f"Vecteur({self.x}, {self.y})"
+
+    def __eq__(self, autre: object) -> bool:
+        return isinstance(autre, Vecteur) and self.x == autre.x and self.y == autre.y
+
+    def __add__(self, autre: 'Vecteur') -> 'Vecteur':
+        # À compléter
+        pass
+
+# Tests
+v1 = Vecteur(1, 2)
+v2 = Vecteur(-3, 4)
+v3 = v1 + v2
+assert v3 == Vecteur(-2, 6)
+print("v1 + v2 =", v3)
+print("Exercice 4 validé !")`,
+                solutionCode: `class Vecteur:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def __str__(self) -> str:
+        return f"Vecteur({self.x}, {self.y})"
+
+    def __eq__(self, autre: object) -> bool:
+        return isinstance(autre, Vecteur) and self.x == autre.x and self.y == autre.y
+
+    def __add__(self, autre: 'Vecteur') -> 'Vecteur':
+        assert isinstance(autre, Vecteur), "On ne peut additionner que deux Vecteurs"
+        return Vecteur(self.x + autre.x, self.y + autre.y)`
+            },
+            {
+                id: "exo-1-5",
+                title: "Exercice 5 (Composition d'objets) : Segment composé de deux Points",
+                statement: `En utilisant la composition d'objets, créer une classe <code>Segment</code> dont le constructeur reçoit deux instances de <code>Point</code> (<code>p1</code> et <code>p2</code>). Écrire la méthode <code>longueur(self)</code> calculant la distance $\\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$ et la méthode <code>milieu(self)</code> renvoyant une nouvelle instance de <code>Point</code>.`,
+                starterCode: `class Point:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+class Segment:
+    def __init__(self, p1: Point, p2: Point):
+        # À compléter
+        pass
+
+    def longueur(self) -> float:
+        # À compléter
+        pass
+
+    def milieu(self) -> Point:
+        # À compléter
+        pass
+
+# Tests
+a = Point(1, 2)
+b = Point(5, 5)
+seg = Segment(a, b)
+assert seg.longueur() == 5.0
+m = seg.milieu()
+assert isinstance(m, Point) and m.x == 3.0 and m.y == 3.5
+print(f"Longueur : {seg.longueur()} | Milieu : ({m.x}, {m.y})")
+print("Exercice 5 validé !")`,
+                solutionCode: `class Point:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+class Segment:
+    def __init__(self, p1: Point, p2: Point):
+        self.p1 = p1
+        self.p2 = p2
+
+    def longueur(self) -> float:
+        return ((self.p2.x - self.p1.x)**2 + (self.p2.y - self.p1.y)**2)**0.5
+
+    def milieu(self) -> Point:
+        return Point((self.p1.x + self.p2.x) / 2, (self.p1.y + self.p2.y) / 2)`
+            },
+            {
+                id: "exo-1-6",
+                title: "Exercice 6 (Héritage & Polymorphisme) : Hiérarchie de Véhicules",
+                statement: `On donne la classe mère <code>Vehicule(marque, modele, vitesse_max)</code>. Créer une classe fille <code>Voiture(Vehicule)</code> possédant un attribut supplémentaire <code>portes</code> (int). Utiliser <code>super().__init__(...)</code> dans son constructeur et redéfinir <code>__str__(self)</code> pour ajouter <code>", X portes"</code> à la chaîne renvoyée par la classe mère.`,
+                starterCode: `class Vehicule:
+    def __init__(self, marque: str, modele: str, vitesse_max: int):
+        self.marque = marque
+        self.modele = modele
+        self.vitesse_max = vitesse_max
+
+    def __str__(self) -> str:
+        return f"{self.marque} {self.modele} (Vmax: {self.vitesse_max} km/h)"
+
+class Voiture(Vehicule):
+    def __init__(self, marque: str, modele: str, vitesse_max: int, nb_portes: int):
+        # À compléter avec super()
+        pass
+
+    def __str__(self) -> str:
+        # À compléter avec super().__str__()
+        pass
+
+# Tests
+v1 = Voiture("Renault", "Clio", 160, 5)
+assert isinstance(v1, Voiture) and isinstance(v1, Vehicule)
+assert str(v1) == "Renault Clio (Vmax: 160 km/h), 5 portes"
+print(v1)
+print("Exercice 6 validé !")`,
+                solutionCode: `class Vehicule:
+    def __init__(self, marque: str, modele: str, vitesse_max: int):
+        self.marque = marque
+        self.modele = modele
+        self.vitesse_max = vitesse_max
+
+    def __str__(self) -> str:
+        return f"{self.marque} {self.modele} (Vmax: {self.vitesse_max} km/h)"
+
+class Voiture(Vehicule):
+    def __init__(self, marque: str, modele: str, vitesse_max: int, nb_portes: int):
+        super().__init__(marque, modele, vitesse_max)
+        self.portes = nb_portes
+
+    def __str__(self) -> str:
+        return super().__str__() + f", {self.portes} portes"`
             }
         ]
     },
@@ -353,11 +633,10 @@ function openSession(session) {
         <span class="badge">${session.tag}</span>
         <h2 class="session-title">${session.title}</h2>
         ${session.summary}
-        <h3 style="margin-top: 1.75rem;">Exercices types à compléter</h3>
+        <h3 style="margin-top: 2rem; color: var(--accent);">Exercices types à compléter</h3>
         ${exercisesHTML}
     `;
 
-    // Initialise un éditeur CodeMirror dédié pour chaque exercice
     session.exercises.forEach((exo) => {
         window.createExerciseEditor(exo.id, exo.starterCode);
     });
