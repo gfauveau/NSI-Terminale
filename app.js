@@ -2244,6 +2244,388 @@ print("File à deux piles validée !")`,
         return self.sortie.depile()`
             }
         ]
+    },
+    {
+        id: "seance-6",
+        tag: "Séance 6 • Tableaux Associatifs",
+        title: "Les Dictionnaires & Tables de Hachage",
+        shortDesc: "Révisions 1re (opérations, 3 modes de parcours, compréhensions, tables CSV), tables de hachage, complexité en O(1), QCM et exercices types Bac.",
+        summary: `
+            <!-- MODULE 1 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 1</span>
+                    <h3>Révisions 1re : Tableau associatif & Règles sur les clés</h3>
+                </div>
+                <p>Un <strong>dictionnaire</strong> implémente le type abstrait <strong>tableau associatif</strong> : contrairement aux listes indexées par des entiers consécutifs ($0, 1, 2, \\dots$), il associe des valeurs à des <strong>clés uniques</strong>.</p>
+                <div class="course-grid">
+                    <div class="concept-card">
+                        <h4>1. Structure mutable & Ordre</h4>
+                        <p>On peut ajouter, modifier ou supprimer des paires clé-valeur après création. Depuis Python 3.7, l'ordre d'insertion des clés est conservé.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>2. Unicité des clés</h4>
+                        <p>Chaque clé est unique : affecter une nouvelle valeur à une clé existante <strong>écrase</strong> l'ancienne valeur.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>3. Clés obligatoirement immuables</h4>
+                        <p>Les clés doivent être <strong>hachables</strong> (immuables) : <code>str</code>, <code>int</code>, <code>float</code> ou <code>tuple</code> d'immuables. Une <code>list</code> ou un <code>dict</code> est interdit !</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>4. Valeurs libres</h4>
+                        <p>Aucune contrainte sur les valeurs : elles peuvent être de n'importe quel type (nombres, listes, autres dictionnaires, objets...).</p>
+                    </div>
+                </div>
+                <div class="callout-warning">
+                    <strong>Piège classique :</strong> Tenter d'utiliser une liste comme clé (ex. <code>d[[1, 2]] = "val"</code>) déclenche immédiatement l'erreur <code>TypeError: unhashable type: 'list'</code>, car une liste peut être modifiée après coup en gardant la même adresse mémoire.
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Révisions 1re : Opérations essentielles & Les 3 Modes de Parcours</h3>
+                </div>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Opération</th>
+                            <th>Syntaxe Python</th>
+                            <th>Comportement & Précautions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Création</strong></td>
+                            <td><code>d = {}</code> ou <code>d = {"nom": "Turing", "age": 41}</code></td>
+                            <td>Initialise un dictionnaire vide ou pré-rempli.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accès direct / sécurisé</strong></td>
+                            <td><code>d["nom"]</code> ou <code>d.get("cle", defaut)</code></td>
+                            <td><code>d["cle"]</code> lève <code>KeyError</code> si la clé est absente ; <code>.get()</code> renvoie la valeur par défaut.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ajout / Modification</strong></td>
+                            <td><code>d["ville"] = "Londres"</code></td>
+                            <td>Crée la paire si la clé n'existe pas, sinon met à jour sa valeur.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Suppression</strong></td>
+                            <td><code>del d["age"]</code> ou <code>d.pop("age", None)</code></td>
+                            <td>Supprime l'entrée ; <code>pop()</code> renvoie en plus la valeur supprimée.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Test d'appartenance</strong></td>
+                            <td><code>"nom" in d</code></td>
+                            <td>Teste uniquement parmi les <strong>clés</strong> (en $O(1)$). Pour les valeurs : <code>val in d.values()</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="course-grid" style="margin-top: 1.5rem;">
+                    <div class="concept-card">
+                        <h4>Parcours 1 : Par les CLÉS (défaut)</h4>
+                        <pre class="code-block">for cle in d:
+    print(cle, d[cle])</pre>
+                        <p>Équivalent à <code>for cle in d.keys():</code>.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Parcours 2 : Par les VALEURS</h4>
+                        <pre class="code-block">for val in d.values():
+    print(val)</pre>
+                        <p>Récupère directement les valeurs sans les clés.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Parcours 3 : Par PAIRES (items)</h4>
+                        <pre class="code-block">for cle, val in d.items():
+    print(f"{cle} -> {val}")</pre>
+                        <p>Dépaquetage simultané de chaque tuple <code>(cle, val)</code>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Structures imbriquées (Tables CSV) & Compréhensions</h3>
+                </div>
+                <p>En NSI, les tables de données (issues de fichiers CSV ou de requêtes) sont très souvent modélisées par une <strong>liste de dictionnaires</strong>, chaque dictionnaire représentant un enregistrement.</p>
+                <div class="two-col-grid">
+                    <pre class="code-block"># Liste d'enregistrements (Table)
+eleves = [
+    {"nom": "Alice", "classe": "TG1", "moy": 16.5},
+    {"nom": "Bob", "classe": "TG2", "moy": 14.0},
+    {"nom": "Charlie", "classe": "TG1", "moy": 17.5}
+]
+
+# Accès imbriqué :
+print(eleves[0]["moy"])  # Affiche 16.5</pre>
+                    <pre class="code-block"># Dictionnaire en compréhension
+carres = {x: x**2 for x in range(6)}
+# {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+
+# Filtrage conditionnel sur la table :
+admis_tg1 = {
+    e["nom"]: e["moy"]
+    for e in eleves
+    if e["classe"] == "TG1" and e["moy"] >= 15
+}</pre>
+                </div>
+            </div>
+
+            <!-- MODULE 4 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 4</span>
+                    <h3>Terminale : Fonctionnement interne (Table de Hachage) & Complexités</h3>
+                </div>
+                <p>Comment Python parvient-il à retrouver une clé parmi un million d'entrées en un temps quasi instantané ? En coulisses, un dictionnaire est implémenté à l'aide d'une <strong>table de hachage</strong>.</p>
+                <div class="callout-info">
+                    <strong>Principe du hachage :</strong> Lorsqu'on accède à <code>d[cle]</code>, Python calcule une empreinte numérique via <code>hash(cle)</code> qui indique directement l'adresse (l'indice) de la case mémoire où se situe la valeur, sans avoir à parcourir les autres éléments. <em>(Culture générale : les fonctions de hachage cryptographiques comme SHA-256 servent aussi à vérifier l'intégrité des fichiers et stocker les empreintes de mots de passe.)</em>
+                </div>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Opération</th>
+                            <th>Dictionnaire (Table de hachage)</th>
+                            <th>Liste Python (<code>list</code>)</th>
+                            <th>Justification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Recherche (<code>x in struct</code>)</strong></td>
+                            <td><strong>$O(1)$ en moyenne</strong></td>
+                            <td>$O(n)$ (linéaire)</td>
+                            <td>Calcul direct de <code>hash(x)</code> dans un dict vs parcours séquentiel dans une liste.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accès à une valeur</strong></td>
+                            <td><strong>$O(1)$ en moyenne</strong></td>
+                            <td>$O(1)$ (par indice)</td>
+                            <td>Adressage direct dans les deux cas.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insertion</strong></td>
+                            <td><strong>$O(1)$ en moyenne</strong></td>
+                            <td>$O(1)$ amorti en fin</td>
+                            <td>Écriture directe dans l'alvéole calculée par le hachage.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Suppression</strong></td>
+                            <td><strong>$O(1)$ en moyenne</strong></td>
+                            <td>$O(n)$ (décalages)</td>
+                            <td>Libération directe de l'entrée sans décaler les autres éléments.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-success">
+                    <strong>Checklist Anti-Erreurs Bac NSI :</strong>
+                    <ul class="checklist-list">
+                        <li>Utiliser des crochets <code>d['cle']</code> et jamais des parenthèses <code>d('cle')</code>.</li>
+                        <li>Toujours vérifier <code>if cle in d:</code> avant d'accéder à <code>d[cle]</code> pour éviter une <code>KeyError</code>.</li>
+                        <li><strong>Ne jamais ajouter ni supprimer de clés pendant le parcours</strong> d'un dictionnaire (<code>for cle in d:</code>), sous peine de déclencher une <code>RuntimeError: dictionary changed size during iteration</code>.</li>
+                        <li>Argumenter au Bac que la recherche d'une clé dans un dictionnaire est en <strong>$O(1)$</strong> en moyenne contre <strong>$O(n)$</strong> dans une liste.</li>
+                    </ul>
+                </div>
+            </div>
+        `,
+        qcm: [
+            {
+                question: "1. Parmi les expressions suivantes, laquelle est valide en Python pour définir une clé de dictionnaire ?",
+                options: [
+                    "<code>d[[48.85, 2.35]] = 'Paris'</code>",
+                    "<code>d[(48.85, 2.35)] = 'Paris'</code>",
+                    "<code>d[{'ville': 'Paris'}] = 75</code>",
+                    "<code>d[{1, 2}] = 'ensemble'</code>"
+                ],
+                answer: 1,
+                explanation: "Seuls les objets immuables (hachables) peuvent servir de clés. Un tuple ne contenant que des flottants est immuable, contrairement aux listes, dictionnaires ou ensembles."
+            },
+            {
+                question: "2. On considère <code>notes = {'Alice': 16, 'Bob': 14}</code>. Que renvoie l'expression <code>16 in notes</code> ?",
+                options: [
+                    "<code>True</code>",
+                    "<code>False</code>",
+                    "<code>'Alice'</code>",
+                    "Une erreur <code>KeyError</code>"
+                ],
+                answer: 1,
+                explanation: "L'opérateur in appliqué directement à un dictionnaire recherche uniquement parmi ses clés ('Alice', 'Bob'), pas parmi ses valeurs. Pour tester les valeurs, il faut écrire 16 in notes.values()."
+            },
+            {
+                question: "3. Quelle est la complexité temporelle moyenne du test d'appartenance <code>cle in d</code> dans un dictionnaire de $n$ éléments ?",
+                options: [
+                    "$O(1)$ (temps constant)",
+                    "$O(\\log_2 n)$ (temps logarithmique)",
+                    "$O(n)$ (temps linéaire)",
+                    "$O(n^2)$ (temps quadratique)"
+                ],
+                answer: 0,
+                explanation: "Grâce à la table de hachage interne, Python calcule directement l'emplacement mémoire de la clé via hash(cle) en temps constant O(1) en moyenne."
+            },
+            {
+                question: "4. Que se passe-t-il si l'on tente de supprimer une clé à l'intérieur d'une boucle <code>for cle in d:</code> ?",
+                options: [
+                    "La boucle ignore la clé supprimée et continue normalement",
+                    "Python lève une exception <code>RuntimeError: dictionary changed size during iteration</code>",
+                    "Le dictionnaire est entièrement vidé",
+                    "La suppression est reportée après la boucle"
+                ],
+                answer: 1,
+                explanation: "Il est interdit de modifier la taille d'un dictionnaire (ajout ou suppression de clés) pendant qu'on itère dessus."
+            },
+            {
+                question: "5. Que renvoie <code>d.get('score', 0)</code> si la clé <code>'score'</code> n'existe pas dans le dictionnaire <code>d</code> ?",
+                options: [
+                    "Une exception <code>KeyError</code>",
+                    "<code>None</code>",
+                    "<code>0</code>",
+                    "<code>False</code>"
+                ],
+                answer: 2,
+                explanation: "La méthode get(cle, defaut) renvoie la valeur associée à cle si elle est présente, et la valeur par défaut fournie (ici 0) sans lever d'erreur si elle est absente."
+            },
+            {
+                question: "6. Quel dictionnaire est construit par l'expression <code>{k: k % 2 == 0 for k in range(1, 5)}</code> ?",
+                options: [
+                    "<code>{2: True, 4: True}</code>",
+                    "<code>{1: False, 2: True, 3: False, 4: True}</code>",
+                    "<code>[False, True, False, True]</code>",
+                    "<code>{0: True, 1: False, 2: True, 3: False}</code>"
+                ],
+                answer: 1,
+                explanation: "Pour chaque entier k de 1 à 4 inclus, la clé est k et la valeur est le booléen (k % 2 == 0)."
+            }
+        ],
+        exercises: [
+            {
+                id: "exo-6-1",
+                title: "Exercice 1 (Algorithme type Bac) : Dénombrement & Inversion de dictionnaire",
+                statement: `1. Écrire une fonction <code>frequences_mots(phrase)</code> qui découpe <code>phrase</code> avec <code>phrase.split()</code> et renvoie un dictionnaire associant chaque mot à son nombre d'apparitions.
+                <br>2. Écrire une fonction <code>inverser_dico(dico)</code> qui renvoie un nouveau dictionnaire où les valeurs deviennent les clés et les clés deviennent les valeurs (en supposant les valeurs uniques et immuables).`,
+                starterCode: `def frequences_mots(phrase: str) -> dict[str, int]:
+    # À compléter
+    pass
+
+def inverser_dico(dico: dict) -> dict:
+    # À compléter (en compréhension ou avec une boucle)
+    pass
+
+# Tests
+texte = "le chat mange le poisson et le chat dort"
+assert frequences_mots(texte) == {"le": 3, "chat": 2, "mange": 1, "poisson": 1, "et": 1, "dort": 1}
+assert inverser_dico({"FR": "Paris", "UK": "Londres"}) == {"Paris": "FR", "Londres": "UK"}
+print("Exercice 1 validé !")`,
+                solutionCode: `def frequences_mots(phrase: str) -> dict[str, int]:
+    compte = {}
+    for mot in phrase.split():
+        compte[mot] = compte.get(mot, 0) + 1
+    return compte
+
+def inverser_dico(dico: dict) -> dict:
+    return {valeur: cle for cle, valeur in dico.items()}`
+            },
+            {
+                id: "exo-6-2",
+                title: "Exercice 2 (Manipulation de tables) : Exploitation d'une liste de dictionnaires",
+                statement: `On dispose d'une table <code>catalogue</code> (liste de dictionnaires ayant pour clés <code>"titre"</code>, <code>"genre"</code> et <code>"note"</code>).
+                <br>1. Écrire <code>filtrer_par_genre(catalogue, genre)</code> renvoyant la liste des titres appartenant au <code>genre</code> demandé.
+                <br>2. Écrire <code>meilleur_film(catalogue)</code> renvoyant le titre du film ayant la note la plus élevée.`,
+                starterCode: `catalogue = [
+    {"titre": "Inception", "genre": "Sci-Fi", "note": 8.8},
+    {"titre": "Le Parrain", "genre": "Drame", "note": 9.2},
+    {"titre": "Interstellar", "genre": "Sci-Fi", "note": 8.7},
+    {"titre": "Parasite", "genre": "Thriller", "note": 8.5}
+]
+
+def filtrer_par_genre(catalogue: list[dict], genre: str) -> list[str]:
+    # À compléter
+    pass
+
+def meilleur_film(catalogue: list[dict]) -> str:
+    assert len(catalogue) > 0, "Catalogue vide"
+    # À compléter
+    pass
+
+# Tests
+assert filtrer_par_genre(catalogue, "Sci-Fi") == ["Inception", "Interstellar"]
+assert meilleur_film(catalogue) == "Le Parrain"
+print("Exploitation de table validée !")`,
+                solutionCode: `def filtrer_par_genre(catalogue: list[dict], genre: str) -> list[str]:
+    return [film["titre"] for film in catalogue if film["genre"] == genre]
+
+def meilleur_film(catalogue: list[dict]) -> str:
+    assert len(catalogue) > 0, "Catalogue vide"
+    top = catalogue[0]
+    for film in catalogue:
+        if film["note"] > top["note"]:
+            top = film
+    return top["titre"]`
+            },
+            {
+                id: "exo-6-3",
+                title: "Exercice 3 (Regroupement par clé) : Indexation d'élèves par classe",
+                statement: `Écrire une fonction <code>regrouper_par_classe(eleves)</code> qui prend une liste de dictionnaires <code>{"nom": ..., "classe": ...}</code> et renvoie un dictionnaire associant à chaque nom de classe la <strong>liste des noms des élèves</strong> de cette classe.`,
+                starterCode: `def regrouper_par_classe(eleves: list[dict]) -> dict[str, list[str]]:
+    groupes = {}
+    # Pour chaque élève, ajouter son nom dans groupes[classe]
+    # (créer la liste vide si la classe n'est pas encore dans groupes)
+    return groupes
+
+# Tests
+inscrits = [
+    {"nom": "Alice", "classe": "TG1"},
+    {"nom": "Bob", "classe": "TG2"},
+    {"nom": "Charlie", "classe": "TG1"},
+    {"nom": "Diana", "classe": "TG2"},
+    {"nom": "Eliott", "classe": "TG1"}
+]
+res = regrouper_par_classe(inscrits)
+assert res == {"TG1": ["Alice", "Charlie", "Eliott"], "TG2": ["Bob", "Diana"]}
+print("Regroupement par classe :", res)
+print("Exercice 3 validé !")`,
+                solutionCode: `def regrouper_par_classe(eleves: list[dict]) -> dict[str, list[str]]:
+    groupes = {}
+    for eleve in eleves:
+        cl = eleve["classe"]
+        if cl not in groupes:
+            groupes[cl] = []
+        groupes[cl].append(eleve["nom"])
+    return groupes`
+            },
+            {
+                id: "exo-6-4",
+                title: "Exercice 4 (Optimisation en $O(n)$ grâce au hachage) : Problème des deux sommes (Two Sum)",
+                statement: `Étant donné une liste d'entiers <code>nombres</code> et une <code>cible</code>, on souhaite trouver deux indices distincts <code>(i, j)</code> tels que <code>nombres[i] + nombres[j] == cible</code>.
+                <br>Au lieu d'une double boucle en $O(n^2)$, utiliser un dictionnaire <code>deja_vus</code> mémorisant <code>{valeur: indice}</code> au fil d'un unique parcours pour résoudre le problème en temps linéaire <strong>$O(n)$</strong>.`,
+                starterCode: `def deux_sommes(nombres: list[int], cible: int) -> tuple[int, int] | None:
+    deja_vus = {}
+    for i, val in enumerate(nombres):
+        complement = cible - val
+        # Si complement est dans deja_vus, renvoyer (deja_vus[complement], i)
+        # Sinon mémoriser deja_vus[val] = i
+        pass
+    return None
+
+# Tests
+assert deux_sommes([2, 7, 11, 15], 9) == (0, 1)
+assert deux_sommes([3, 2, 4], 6) == (1, 2)
+assert deux_sommes([1, 2, 3], 10) is None
+print("Algorithme Two Sum en O(n) validé !")`,
+                solutionCode: `def deux_sommes(nombres: list[int], cible: int) -> tuple[int, int] | None:
+    deja_vus = {}
+    for i, val in enumerate(nombres):
+        complement = cible - val
+        if complement in deja_vus:
+            return (deja_vus[complement], i)
+        deja_vus[val] = i
+    return None`
+            }
+        ]
     }
 ];
 
