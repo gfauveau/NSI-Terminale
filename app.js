@@ -2626,6 +2626,542 @@ print("Algorithme Two Sum en O(n) validé !")`,
     return None`
             }
         ]
+    },
+    {
+        id: "seance-7",
+        tag: "Séance 7 • Structures Hiérarchiques",
+        title: "Arbres Binaires & ABR",
+        shortDesc: "Vocabulaire, conventions de hauteur, encadrement taille/hauteur, 4 parcours (BFS, préfixe, infixe, postfixe), implémentations POO/tuples, ABR, QCM et 4 exercices.",
+        summary: `
+            <!-- MODULE 1 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 1</span>
+                    <h3>Vocabulaire fondamental & Conventions de hauteur</h3>
+                </div>
+                <p>Un <strong>arbre</strong> est une structure hiérarchique composée de <strong>nœuds</strong> reliés par des <strong>arêtes</strong> (graphe connexe, non orienté et sans cycle muni d'une racine unique). Un arbre à $t$ nœuds possède toujours exactement <strong>$t - 1$ arêtes</strong>.</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Terme</th>
+                            <th>Définition formelle</th>
+                            <th>Propriété clé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Racine</strong></td>
+                            <td>Unique nœud initial ne possédant aucun père</td>
+                            <td>Point d'entrée unique au sommet de l'arbre</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Feuille (nœud externe)</strong></td>
+                            <td>Nœud terminal sans aucun fils</td>
+                            <td>Arité (degré) égale à $0$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nœud interne</strong></td>
+                            <td>Nœud possédant au moins un fils</td>
+                            <td>Dans un arbre binaire, arité égale à $1$ ou $2$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Taille ($t$)</strong></td>
+                            <td>Nombre total de nœuds de l'arbre</td>
+                            <td>Racine + nœuds internes + feuilles</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Profondeur / Hauteur ($h$)</strong></td>
+                            <td>Profondeur d'un nœud = distance à la racine ; Hauteur = profondeur maximale</td>
+                            <td>Mesure l'encombrement vertical de l'arbre</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-warning">
+                    <strong>Attention aux deux conventions du Bac sur la hauteur :</strong><br>
+                    • <strong>Convention officielle NSI (la plus fréquente) :</strong> l'arbre vide a pour hauteur <strong>$0$</strong>, et un arbre réduit à sa racine a pour hauteur <strong>$1$</strong>.<br>
+                    • <strong>Convention alternative (graphes) :</strong> l'arbre vide a pour hauteur <strong>$-1$</strong>, et la racine a pour hauteur <strong>$0$</strong> (nombre d'arêtes).<br>
+                    <em>Réflexe :</em> toujours relire le préambule du sujet pour vérifier la convention choisie !
+                </div>
+            </div>
+
+            <!-- MODULE 2 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 2</span>
+                    <h3>Typologies d'Arbres Binaires & Théorème d'encadrement</h3>
+                </div>
+                <p>Dans un <strong>arbre binaire</strong>, chaque nœud possède au plus deux fils ordonnés : un <strong>sous-arbre gauche (SAG)</strong> et un <strong>sous-arbre droit (SAD)</strong>.</p>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Type d'arbre binaire</th>
+                            <th>Propriété structurelle</th>
+                            <th>Relation Taille ($t$) / Hauteur ($h$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Arbre filiforme (peigne)</strong></td>
+                            <td>Chaque nœud interne possède exactement $1$ fils (équivalent à une liste chaînée).</td>
+                            <td>Taille minimale : $t = h$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Arbre complet</strong></td>
+                            <td>Tous les niveaux sont intégralement remplis jusqu'à la hauteur $h$.</td>
+                            <td>Taille maximale : $t = 2^h - 1$ (avec $2^{h-1}$ feuilles)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Arbre binaire strict (localement complet)</strong></td>
+                            <td>Chaque nœud possède exactement $0$ ou $2$ fils (aucun fils unique).</td>
+                            <td>$t = 2f - 1$ (toujours impair, avec $f$ feuilles)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Arbre équilibré</strong></td>
+                            <td>Pour tout nœud, l'écart de hauteur entre SAG et SAD vaut au plus $1$.</td>
+                            <td>Hauteur optimale : $h \\approx \\log_2(t + 1)$</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-info">
+                    <strong>Théorème d'encadrement (convention NSI : vide = 0, racine = 1) :</strong><br>
+                    Pour tout arbre binaire de taille $t$ et de hauteur $h$ :
+                    $$h \\le t \\le 2^h - 1 \\quad \\Longleftrightarrow \\quad \\lfloor \\log_2(t) \\rfloor + 1 \\le h \\le t$$
+                </div>
+            </div>
+
+            <!-- MODULE 3 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 3</span>
+                    <h3>Les 4 Parcours d'Arbres Binaires</h3>
+                </div>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Parcours</th>
+                            <th>Type & Structure</th>
+                            <th>Ordre de visite</th>
+                            <th>Mnémotechnique</th>
+                            <th>Applications Bac</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Largeur (BFS)</strong></td>
+                            <td>Largeur (File <strong>FIFO</strong>)</td>
+                            <td>Niveau par niveau, de haut en bas et de gauche à droite</td>
+                            <td>Étage par étage</td>
+                            <td>Plus court chemin, numérotation de tas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Préfixe (DFS)</strong></td>
+                            <td>Profondeur (Récursif / Pile)</td>
+                            <td><strong>Racine</strong> $\\rightarrow$ Gauche $\\rightarrow$ Droit</td>
+                            <td><strong>VGD</strong> (Voir en premier)</td>
+                            <td>Clonage / sérialisation exacte d'un arbre</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Infixe (DFS)</strong></td>
+                            <td>Profondeur (Récursif / Pile)</td>
+                            <td>Gauche $\\rightarrow$ <strong>Racine</strong> $\\rightarrow$ Droit</td>
+                            <td><strong>GVD</strong> (Voir au milieu)</td>
+                            <td><strong>Restitution triée des clés d'un ABR</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Postfixe (DFS)</strong></td>
+                            <td>Profondeur (Récursif / Pile)</td>
+                            <td>Gauche $\\rightarrow$ Droit $\\rightarrow$ <strong>Racine</strong></td>
+                            <td><strong>GDV</strong> (Voir à la fin)</td>
+                            <td>Évaluation d'expressions (NPI), suppression</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MODULE 4 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 4</span>
+                    <h3>Les 3 Implémentations en Python & Algorithmes Récursifs</h3>
+                </div>
+                <div class="course-grid">
+                    <div class="concept-card">
+                        <h4>Option A : POO (Classe <code>Noeud</code> / <code>Arbre</code>)</h4>
+                        <pre class="code-block">class Noeud:
+    def __init__(self, val, g=None, d=None):
+        self.val = val
+        self.gauche = g
+        self.droit = d
+
+    def est_feuille(self):
+        return self.gauche is None and self.droit is None</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Option B : Tuples imbriqués</h4>
+                        <pre class="code-block"># Arbre vide : ()
+# Nœud : (valeur, sag, sad)
+a = ('A', ('B', (), ()), ('C', (), ()))
+
+def racine(a): return a[0]
+def sag(a): return a[1]
+def sad(a): return a[2]</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h4>Option C : Tableau (indexé dès 0)</h4>
+                        <p>Pour un arbre complet stocké dans un tableau <code>tab</code> (racine à l'indice $0$) :</p>
+                        <p>• <strong>Fils gauche de $i$ :</strong> <code>2*i + 1</code></p>
+                        <p>• <strong>Fils droit de $i$ :</strong> <code>2*i + 2</code></p>
+                        <p>• <strong>Père de $i$ :</strong> <code>(i - 1) // 2</code></p>
+                    </div>
+                </div>
+                <pre class="code-block"># Algorithmes récursifs fondamentaux (convention NSI : arbre vide -> hauteur 0)
+def taille(arbre):
+    if arbre is None:
+        return 0
+    return 1 + taille(arbre.gauche) + taille(arbre.droit)
+
+def hauteur(arbre):
+    if arbre is None:
+        return 0
+    return 1 + max(hauteur(arbre.gauche), hauteur(arbre.droit))
+
+def parcours_infixe(arbre):
+    if arbre is None:
+        return []
+    return parcours_infixe(arbre.gauche) + [arbre.val] + parcours_infixe(arbre.droit)</pre>
+            </div>
+
+            <!-- MODULE 5 -->
+            <div class="lesson-module">
+                <div class="lesson-module-header">
+                    <span class="module-num">Module 5</span>
+                    <h3>Arbres Binaires de Recherche (ABR)</h3>
+                </div>
+                <p>Un <strong>Arbre Binaire de Recherche (ABR)</strong> est un arbre binaire dont les étiquettes sont comparables et vérifient pour <strong>tout nœud</strong> : toutes les clés du sous-arbre gauche sont inférieures (ou égales) à la clé du nœud, et toutes les clés du sous-arbre droit lui sont strictement supérieures.</p>
+                <div class="callout-info">
+                    <strong>Propriété fondamentale :</strong> Le <strong>parcours infixe (GVD)</strong> d'un ABR énumère toujours l'ensemble de ses clés dans l'<strong>ordre croissant</strong>.
+                </div>
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>Opération sur un ABR</th>
+                            <th>Arbre Équilibré (Cas optimal)</th>
+                            <th>Arbre Peigne / Filiforme (Pire cas)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Recherche d'une clé</strong></td>
+                            <td><strong>$O(\\log_2 n)$</strong> (dichotomique)</td>
+                            <td>$O(n)$ (dégénère en liste)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insertion d'une clé</strong></td>
+                            <td><strong>$O(\\log_2 n)$</strong></td>
+                            <td>$O(n)$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Minimum / Maximum</strong></td>
+                            <td><strong>$O(\\log_2 n)$</strong> (tout à gauche / droite)</td>
+                            <td>$O(n)$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parcours infixe complet</strong></td>
+                            <td>$O(n)$ (visite des $n$ nœuds)</td>
+                            <td>$O(n)$</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="callout-success">
+                    <strong>Checklist Anti-Erreurs Bac NSI :</strong>
+                    <ul class="checklist-list">
+                        <li>Vérifier dès la lecture du sujet la convention sur la hauteur de l'arbre vide ($0$ ou $-1$).</li>
+                        <li>Toujours commencer les fonctions récursives par le test d'arrêt <code>if arbre is None:</code>.</li>
+                        <li>Retenir les mnémotechniques : <strong>VGD</strong> (Préfixe), <strong>GVD</strong> (Infixe), <strong>GDV</strong> (Postfixe).</li>
+                        <li>Ne pas confondre un arbre binaire quelconque avec un <strong>ABR</strong> (qui impose la relation d'ordre sur tous les sous-arbres).</li>
+                    </ul>
+                </div>
+            </div>
+        `,
+        qcm: [
+            {
+                question: "1. Quelle est la taille maximale d'un arbre binaire de hauteur $h = 4$ (avec la convention NSI où un arbre réduit à sa racine a pour hauteur $1$) ?",
+                options: [
+                    "$8$ nœuds",
+                    "$15$ nœuds",
+                    "$16$ nœuds",
+                    "$31$ nœuds"
+                ],
+                answer: 1,
+                explanation: "Un arbre binaire complet de hauteur h = 4 possède au maximum $2^h - 1 = 2^4 - 1 = 15$ nœuds."
+            },
+            {
+                question: "2. Quel parcours d'un Arbre Binaire de Recherche (ABR) permet de récupérer toutes ses valeurs triées par ordre croissant ?",
+                options: [
+                    "Le parcours en largeur (BFS)",
+                    "Le parcours préfixe (VGD)",
+                    "Le parcours infixe (GVD)",
+                    "Le parcours postfixe (GDV)"
+                ],
+                answer: 2,
+                explanation: "Par définition d'un ABR, toutes les clés du sous-arbre gauche sont plus petites que la racine, elle-même plus petite que les clés du sous-arbre droit : le parcours Gauche -> Racine -> Droit (infixe) restitue donc les clés dans l'ordre croissant."
+            },
+            {
+                question: "3. Un arbre binaire possède exactement $12$ nœuds. Combien possède-t-il d'arêtes ?",
+                options: [
+                    "$11$ arêtes",
+                    "$12$ arêtes",
+                    "$13$ arêtes",
+                    "$24$ arêtes"
+                ],
+                answer: 0,
+                explanation: "Tout arbre à t nœuds possède exactement t - 1 arêtes (chaque nœud sauf la racine possède une unique arête le reliant à son père)."
+            },
+            {
+                question: "4. Dans une représentation séquentielle en tableau d'un arbre binaire complet indexé à partir de $0$, où se situe le fils droit du nœud placé à l'indice $i$ ?",
+                options: [
+                    "À l'indice $2i$",
+                    "À l'indice $2i + 1$",
+                    "À l'indice $2i + 2$",
+                    "À l'indice $(i - 1) // 2$"
+                ],
+                answer: 2,
+                explanation: "Lorsque la racine est à l'indice 0, le fils gauche du nœud i est en 2i + 1 et son fils droit est en 2i + 2."
+            },
+            {
+                question: "5. Quelle est la complexité dans le pire des cas (arbre dégénéré filiforme) de la recherche d'une clé dans un ABR de $n$ nœuds ?",
+                options: [
+                    "$O(1)$",
+                    "$O(\\log_2 n)$",
+                    "$O(n)$",
+                    "$O(n^2)$"
+                ],
+                answer: 2,
+                explanation: "Si les clés ont été insérées dans l'ordre croissant, l'ABR est filiforme (hauteur h = n) et la recherche parcourt tous les nœuds en O(n), contre O(log2 n) lorsque l'arbre est équilibré."
+            },
+            {
+                question: "6. Quelle structure de données linéaire est utilisée pour implémenter de manière itérative un parcours en largeur (BFS) d'un arbre ?",
+                options: [
+                    "Une pile (LIFO)",
+                    "Une file (FIFO)",
+                    "Un tableau trié",
+                    "Un dictionnaire"
+                ],
+                answer: 1,
+                explanation: "Le parcours en largeur explore niveau par niveau : on défile le nœud courant et on enfile successivement son fils gauche puis son fils droit dans une file FIFO."
+            }
+        ],
+        exercises: [
+            {
+                id: "exo-7-1",
+                title: "Exercice 1 (Métriques récursives) : Taille, Hauteur et Nombre de feuilles",
+                statement: `On utilise la classe <code>Noeud(val, gauche, droit)</code> et la convention NSI (arbre vide $\\rightarrow$ hauteur $0$, feuille $\\rightarrow$ hauteur $1$). Implémenter les fonctions récursives <code>taille(arbre)</code>, <code>hauteur(arbre)</code> et <code>nb_feuilles(arbre)</code>.`,
+                starterCode: `class Noeud:
+    def __init__(self, val, gauche=None, droit=None):
+        self.val = val
+        self.gauche = gauche
+        self.droit = droit
+
+def taille(arbre: Noeud) -> int:
+    # À compléter
+    pass
+
+def hauteur(arbre: Noeud) -> int:
+    # Convention NSI : None -> 0
+    pass
+
+def nb_feuilles(arbre: Noeud) -> int:
+    # À compléter
+    pass
+
+# Construction de l'arbre 'PYTHON' :
+#       P
+#      / \\
+#     Y   T
+#    / \\   \\
+#   H   O   N
+arbre_python = Noeud('P',
+    Noeud('Y', Noeud('H'), Noeud('O')),
+    Noeud('T', None, Noeud('N'))
+)
+
+assert taille(arbre_python) == 6
+assert hauteur(arbre_python) == 3
+assert nb_feuilles(arbre_python) == 3
+print("Métriques validées !")`,
+                solutionCode: `def taille(arbre: Noeud) -> int:
+    if arbre is None:
+        return 0
+    return 1 + taille(arbre.gauche) + taille(arbre.droit)
+
+def hauteur(arbre: Noeud) -> int:
+    if arbre is None:
+        return 0
+    return 1 + max(hauteur(arbre.gauche), hauteur(arbre.droit))
+
+def nb_feuilles(arbre: Noeud) -> int:
+    if arbre is None:
+        return 0
+    if arbre.gauche is None and arbre.droit is None:
+        return 1
+    return nb_feuilles(arbre.gauche) + nb_feuilles(arbre.droit)`
+            },
+            {
+                id: "exo-7-2",
+                title: "Exercice 2 (Parcours en profondeur & en largeur) : Préfixe, Infixe, Postfixe et BFS",
+                statement: `Compléter les fonctions de parcours renvoyant la liste des étiquettes visitées :
+                <br>• <code>infixe(arbre)</code> (Gauche $\\rightarrow$ Racine $\\rightarrow$ Droit) ;
+                <br>• <code>postfixe(arbre)</code> (Gauche $\\rightarrow$ Droit $\\rightarrow$ Racine) ;
+                <br>• <code>largeur(arbre)</code> utilisant une file (avec <code>collections.deque</code>).`,
+                starterCode: `from collections import deque
+
+class Noeud:
+    def __init__(self, val, gauche=None, droit=None):
+        self.val = val
+        self.gauche = gauche
+        self.droit = droit
+
+def infixe(arbre: Noeud) -> list:
+    # À compléter
+    pass
+
+def postfixe(arbre: Noeud) -> list:
+    # À compléter
+    pass
+
+def largeur(arbre: Noeud) -> list:
+    if arbre is None:
+        return []
+    resultat = []
+    file = deque([arbre])
+    # Tant que la file n'est pas vide : défiler un nœud, ajouter sa valeur, enfiler gauche puis droit
+    return resultat
+
+# Tests sur l'arbre PYTHON
+a = Noeud('P', Noeud('Y', Noeud('H'), Noeud('O')), Noeud('T', None, Noeud('N')))
+assert infixe(a) == ['H', 'Y', 'O', 'P', 'T', 'N']
+assert postfixe(a) == ['H', 'O', 'Y', 'N', 'T', 'P']
+assert largeur(a) == ['P', 'Y', 'T', 'H', 'O', 'N']
+print("Parcours largeur :", largeur(a))
+print("Tous les parcours sont validés !")`,
+                solutionCode: `from collections import deque
+
+def infixe(arbre: Noeud) -> list:
+    if arbre is None:
+        return []
+    return infixe(arbre.gauche) + [arbre.val] + infixe(arbre.droit)
+
+def postfixe(arbre: Noeud) -> list:
+    if arbre is None:
+        return []
+    return postfixe(arbre.gauche) + postfixe(arbre.droit) + [arbre.val]
+
+def largeur(arbre: Noeud) -> list:
+    if arbre is None:
+        return []
+    resultat = []
+    file = deque([arbre])
+    while file:
+        noeud = file.popleft()
+        resultat.append(noeud.val)
+        if noeud.gauche is not None:
+            file.append(noeud.gauche)
+        if noeud.droit is not None:
+            file.append(noeud.droit)
+    return resultat`
+            },
+            {
+                id: "exo-7-3",
+                title: "Exercice 3 (Arbres Binaires de Recherche) : Insertion, Recherche et Minimum",
+                statement: `Compléter les trois opérations fondamentales sur un ABR (sans doublons) :
+                <br>1. <code>inserer_abr(arbre, cle)</code> qui insère <code>cle</code> à sa place et renvoie la racine de l'arbre ;
+                <br>2. <code>rechercher_abr(arbre, cle)</code> qui renvoie <code>True</code> si <code>cle</code> est présente, <code>False</code> sinon ;
+                <br>3. <code>minimum_abr(arbre)</code> qui renvoie la plus petite clé de l'ABR non vide.`,
+                starterCode: `class Noeud:
+    def __init__(self, val, gauche=None, droit=None):
+        self.val = val
+        self.gauche = gauche
+        self.droit = droit
+
+def inserer_abr(arbre: Noeud, cle: int) -> Noeud:
+    # À compléter
+    pass
+
+def rechercher_abr(arbre: Noeud, cle: int) -> bool:
+    # À compléter
+    pass
+
+def minimum_abr(arbre: Noeud) -> int:
+    assert arbre is not None, "ABR vide"
+    # La plus petite clé se trouve tout à gauche
+    pass
+
+# Tests
+abr = None
+for v in [8, 3, 10, 1, 6, 14, 4, 7, 13]:
+    abr = inserer_abr(abr, v)
+
+assert rechercher_abr(abr, 6) == True
+assert rechercher_abr(abr, 11) == False
+assert minimum_abr(abr) == 1
+print("ABR validé ! Minimum :", minimum_abr(abr))`,
+                solutionCode: `def inserer_abr(arbre: Noeud, cle: int) -> Noeud:
+    if arbre is None:
+        return Noeud(cle)
+    if cle < arbre.val:
+        arbre.gauche = inserer_abr(arbre.gauche, cle)
+    elif cle > arbre.val:
+        arbre.droit = inserer_abr(arbre.droit, cle)
+    return arbre
+
+def rechercher_abr(arbre: Noeud, cle: int) -> bool:
+    if arbre is None:
+        return False
+    if cle == arbre.val:
+        return True
+    elif cle < arbre.val:
+        return rechercher_abr(arbre.gauche, cle)
+    else:
+        return rechercher_abr(arbre.droit, cle)
+
+def minimum_abr(arbre: Noeud) -> int:
+    assert arbre is not None, "ABR vide"
+    courant = arbre
+    while courant.gauche is not None:
+        courant = courant.gauche
+    return courant.val`
+            },
+            {
+                id: "exo-7-4",
+                title: "Exercice 4 (Vérification d'un ABR) : Tester si un arbre binaire est bien un ABR",
+                statement: `Attention au piège classique : vérifier uniquement <code>gauche.val <= noeud.val < droit.val</code> localement ne suffit pas ! Il faut vérifier que chaque nœud respecte un intervalle <code>(borne_min, borne_max)</code> hérité de ses ancêtres. Compléter <code>est_abr(arbre)</code>.`,
+                starterCode: `class Noeud:
+    def __init__(self, val, gauche=None, droit=None):
+        self.val = val
+        self.gauche = gauche
+        self.droit = droit
+
+def est_abr(arbre: Noeud, borne_min=float('-inf'), borne_max=float('inf')) -> bool:
+    # À compléter
+    pass
+
+# Tests
+bon_abr = Noeud(10, Noeud(5, Noeud(2), Noeud(8)), Noeud(15))
+# Piege : 12 est dans le sous-arbre gauche de 10 (12 > 5 mais 12 > 10 !)
+faux_abr = Noeud(10, Noeud(5, Noeud(2), Noeud(12)), Noeud(15))
+
+assert est_abr(bon_abr) == True
+assert est_abr(faux_abr) == False
+print("Vérification stricte d'ABR validée !")`,
+                solutionCode: `def est_abr(arbre: Noeud, borne_min=float('-inf'), borne_max=float('inf')) -> bool:
+    if arbre is None:
+        return True
+    if not (borne_min < arbre.val < borne_max):
+        return False
+    return (est_abr(arbre.gauche, borne_min, arbre.val) and
+            est_abr(arbre.droit, arbre.val, borne_max))`
+            }
+        ]
     }
 ];
 
